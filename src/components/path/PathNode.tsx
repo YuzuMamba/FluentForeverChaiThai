@@ -55,7 +55,7 @@ export default function PathNode({ state, icon, label, color, x, y, delayMs = 0,
       requestAnimationFrame(() => setShaking(true))
       setTip(true)
       window.clearTimeout(tipTimer.current)
-      tipTimer.current = window.setTimeout(() => setTip(false), 1700)
+      tipTimer.current = window.setTimeout(() => setTip(false), 2300)
       return
     }
     if (sound) sfx.play('tap')

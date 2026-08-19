@@ -320,14 +320,17 @@
 
 /* crown cap for completed units */
 .crown-node {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 25px;
-  background: linear-gradient(180deg, #ffd970, #f0a020);
-  box-shadow: 0 5px 0 #9c6200, 0 0 26px rgba(255, 176, 32, 0.4);
+  font-size: 27px;
+  padding-bottom: 3px;
+  background: radial-gradient(circle at 50% 32%, #2a3a6e, #131f42 72%);
+  border: 3px solid var(--gold);
+  box-shadow: 0 5px 0 #7a5200, 0 0 26px rgba(255, 176, 32, 0.45);
+  text-shadow: 0 0 12px rgba(255, 201, 77, 0.9);
   animation: path-crown-sheen 2.6s ease-in-out infinite;
 }
 

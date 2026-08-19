@@ -46,7 +46,7 @@ const HOW_CARDS = [
 const GOALS = [
   { xp: 20, name: 'Chill', emoji: '🍵', minutes: 5, popular: false },
   { xp: 50, name: 'Steady', emoji: '🔥', minutes: 10, popular: true },
-  { xp: 100, name: 'Serious', emoji: '⚡', minutes: 20, popular: false },
+  { xp: 100, name: 'Serious', emoji: '🌶️', minutes: 20, popular: false },
 ]
 
 const stepVariants: Variants = {
@@ -188,15 +188,16 @@ const CSS = `
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 6px 26px rgba(255, 150, 32, 0.28));
+  filter: drop-shadow(0 6px 26px rgba(255, 150, 32, 0.28)) drop-shadow(0 3px 8px rgba(7, 12, 26, 0.6));
 }
 .ob-promise {
   color: var(--text-1);
   font-size: clamp(16px, 2.4vw, 19.5px);
   font-weight: 600;
   line-height: 1.6;
-  max-width: 460px;
+  max-width: 560px;
   margin: 12px auto 30px;
+  text-shadow: 0 2px 12px rgba(7, 12, 26, 0.9), 0 0 30px rgba(7, 12, 26, 0.7);
 }
 .ob-cta {
   display: inline-block;
@@ -228,14 +229,20 @@ const CSS = `
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
+  text-shadow: 0 2px 10px rgba(7, 12, 26, 0.95), 0 0 24px rgba(7, 12, 26, 0.8);
 }
-.ob-title { font-size: clamp(28px, 4.4vw, 40px); margin-top: 8px; }
+.ob-title {
+  font-size: clamp(28px, 4.4vw, 40px);
+  margin-top: 8px;
+  text-shadow: 0 3px 16px rgba(7, 12, 26, 0.75);
+}
 .ob-sub {
   color: var(--text-1);
   font-size: 16px;
   line-height: 1.55;
   max-width: 460px;
   margin: 10px auto 0;
+  text-shadow: 0 2px 12px rgba(7, 12, 26, 0.9), 0 0 30px rgba(7, 12, 26, 0.7);
 }
 
 /* ── How it works ── */
@@ -255,6 +262,7 @@ const CSS = `
   gap: 16px;
   padding: 24px 22px;
   text-align: left;
+  background: rgba(20, 30, 58, 0.88);
   transition: transform var(--dur-fast) var(--ease-spring),
               box-shadow var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out);
@@ -323,7 +331,7 @@ const CSS = `
 .ob-goal:active { transform: translateY(1px) scale(0.98); }
 .ob-goal.selected {
   border-color: var(--gold);
-  background: rgba(255, 176, 32, 0.10);
+  background: radial-gradient(130% 90% at 50% 0%, rgba(255, 176, 32, 0.22), rgba(255, 176, 32, 0.02) 60%), var(--surface-raised);
   box-shadow: var(--glow-gold);
 }
 .ob-goal-emoji { font-size: 36px; line-height: 1.2; }
@@ -383,9 +391,15 @@ const CSS = `
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 6px 26px rgba(255, 150, 32, 0.28));
+  filter: drop-shadow(0 6px 26px rgba(255, 150, 32, 0.28)) drop-shadow(0 3px 8px rgba(7, 12, 26, 0.6));
 }
-.ob-ready-en { font-size: 24px; font-weight: 800; color: var(--text-0); margin-top: 2px; }
+.ob-ready-en {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-0);
+  margin-top: 2px;
+  text-shadow: 0 2px 14px rgba(7, 12, 26, 0.85);
+}
 
 /* ── Mobile ── */
 @media (max-width: 720px) {

@@ -17,8 +17,8 @@ export const LESSON_META: Array<{ icon: string; label: string }> = [
 ]
 
 const SPACING = 104
-const TOP_PAD = 82
-const BOTTOM_PAD = 52
+const TOP_PAD = 98
+const BOTTOM_PAD = 80
 /** Sine phase step between consecutive nodes (global, so the road flows). */
 const PHASE = 0.85
 
@@ -108,7 +108,7 @@ export default function UnitSection({ unit, index, progress, unlocked, complete,
                 top: p.y + (q.y - p.y) * t,
                 width: bi === 1 || bi === 2 ? 8 : 6,
                 height: bi === 1 || bi === 2 ? 8 : 6,
-                background: walked ? alpha(color, 0.85) : 'rgba(148, 173, 224, 0.26)',
+                background: walked ? alpha(color, 0.85) : 'rgba(148, 173, 224, 0.38)',
                 boxShadow: walked ? `0 0 9px ${alpha(color, 0.55)}` : 'none',
               }}
             />

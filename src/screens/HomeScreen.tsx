@@ -28,9 +28,9 @@ function Divider() {
   return (
     <div className="path-divider" aria-hidden>
       <span className="line" />
+      <span className="dia" style={{ fontSize: 9, opacity: 0.6 }}>◆</span>
       <span className="dia">◆</span>
-      <span className="dia" style={{ fontSize: 10, opacity: 0.7 }}>✦</span>
-      <span className="dia">◆</span>
+      <span className="dia" style={{ fontSize: 9, opacity: 0.6 }}>◆</span>
       <span className="line" />
     </div>
   )
