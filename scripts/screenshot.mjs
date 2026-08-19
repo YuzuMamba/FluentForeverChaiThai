@@ -136,7 +136,11 @@ for (const [vpName, viewport] of Object.entries(VIEWPORTS)) {
     await page.evaluate((nav) => window.__nav?.(nav), sc.nav)
     await page.waitForTimeout(1800) // let animations settle, 3D warm up
     await sc.after?.(page)
-    await page.screenshot({ path: `${OUT}/${name}-${vpName}.png` })
+    await page.screenshot({
+      path: `${OUT}/${name}-${vpName}.png`,
+      animations: 'disabled', // infinite pulse/float animations otherwise stall capture
+      timeout: 45000,
+    })
     console.log(`✓ ${name}-${vpName}`)
   }
 
