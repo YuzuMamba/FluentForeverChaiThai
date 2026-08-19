@@ -15,8 +15,39 @@ const BASE = process.env.BASE ?? 'http://localhost:5173'
 const OUT = process.env.OUT ?? 'shots'
 
 /** Seed: an engaged learner mid-course, so screens show real living state. */
+/** SRS cards so Review/Profile show a living learner state. */
+function seedCards() {
+  const now = Date.now()
+  const DAY = 86400000
+  const words = [
+    'w.hello', 'w.polite-m', 'w.polite-f', 'w.thanks', 'w.sorry', 'w.yes', 'w.not',
+    'w.i-m', 'w.i-f', 'w.you', 'w.fine', 'w.q-mai', 'w.see-you',
+    'w.name', 'w.what', 'w.he-she', 'w.we', 'w.friend', 'w.person', 'w.of',
+  ]
+  const cards = {}
+  words.forEach((id, i) => {
+    const mastered = i < 6
+    const due = i >= 6 && i < 11
+    cards[id] = {
+      itemId: id,
+      itemType: 'word',
+      deckId: i < 13 ? 'u01' : 'u02',
+      stage: 'review',
+      due: due ? now - (i - 5) * DAY * 0.5 : now + (i + 2) * DAY,
+      interval: mastered ? 25 + i : 2 + i,
+      ease: 2.5,
+      reps: mastered ? 9 : 4,
+      lapses: i % 4 === 3 ? 1 : 0,
+      streak: mastered ? 6 : 2,
+      lastReviewed: now - DAY * (due ? 3 : 1),
+    }
+  })
+  return cards
+}
+
 const SEED = {
   onboarded: true,
+  cards: seedCards(),
   xp: 1240,
   gems: 86,
   streakDays: 12,
