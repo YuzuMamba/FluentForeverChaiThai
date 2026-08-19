@@ -6,3 +6,4 @@ dist-ssr
 shots/
 *.log
 .vite
+tsconfig.tsbuildinfo
