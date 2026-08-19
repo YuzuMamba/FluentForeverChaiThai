@@ -54,6 +54,16 @@ export default function App() {
     // Test/screenshot hooks: navigate and seed state from automation.
     ;(window as any).__nav = (screen: unknown) => useRouter.getState().go(screen as any)
     ;(window as any).__seed = (patch: Record<string, unknown>) => useProgress.setState(patch as any)
+    ;(window as any).__sessionEnd = () => {
+      void import('@/state/session').then(({ useSession }) => {
+        useSession.setState({
+          status: 'complete',
+          meta: { type: 'lesson', unitId: 'u01', lessonIndex: 2, title: 'Greetings & Politeness · Patterns' },
+          correct: 14, wrong: 1, xpEarned: 156, maxCombo: 9, answered: 15,
+          totalGraded: 15, startedAt: Date.now() - 4 * 60 * 1000,
+        })
+      })
+    }
   }, [])
   return (
     <Suspense fallback={<LoadingFallback />}>

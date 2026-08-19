@@ -54,6 +54,13 @@ const SCENARIOS = {
       }
     },
   },
+  'session-end': {
+    nav: { name: 'lesson', unitId: 'u01', lessonIndex: 0 },
+    after: async (page) => {
+      await page.evaluate(() => window.__sessionEnd?.())
+      await page.waitForTimeout(1200)
+    },
+  },
   script: { nav: { name: 'script' } },
   'script-lesson': { nav: { name: 'script-lesson', lessonId: 'sc01' } },
   builder: { nav: { name: 'builder' } },

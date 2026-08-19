@@ -1,0 +1,421 @@
+/* ── Learning path (HomeScreen) ─────────────────────────────────────────────
+   Duolingo-style winding journey, Thai night-market flavored. */
+
+/* Hero */
+.path-hero {
+  text-align: center;
+  padding: 22px 0 4px;
+}
+.path-hero .path-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.9;
+}
+.path-hero h1 {
+  font-size: 34px;
+  margin-top: 2px;
+  text-shadow: 0 4px 24px rgba(3, 7, 18, 0.6);
+}
+.path-hero .path-hero-sub {
+  color: var(--text-1);
+  font-size: 15px;
+  margin-top: 4px;
+}
+.path-overall {
+  position: relative;
+  height: 10px;
+  max-width: 300px;
+  margin: 14px auto 0;
+  border-radius: var(--r-full);
+  background: rgba(22, 33, 62, 0.85);
+  border: 1px solid var(--stroke);
+  overflow: hidden;
+}
+.path-overall .fill {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  min-width: 8px;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright));
+  transition: width 700ms var(--ease-spring);
+}
+.path-overall .fill::after {
+  content: '';
+  position: absolute;
+  inset: 1px 2px auto 2px;
+  height: 2px;
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Column that holds banners + node canvases */
+.path-col {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── Unit banner ── */
+.unit-banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card);
+}
+.unit-banner .unit-emoji {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  font-size: 30px;
+  border-radius: 18px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.14), inset 0 -3px 0 rgba(0, 0, 0, 0.28);
+}
+.unit-banner .unit-eyebrow {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+.unit-banner h2 {
+  font-size: 20px;
+  margin-top: 1px;
+}
+.unit-banner .unit-sub {
+  color: var(--text-1);
+  font-size: 13.5px;
+  margin-top: 1px;
+}
+.unit-banner .unit-outcome {
+  display: flex;
+  gap: 7px;
+  color: var(--text-2);
+  font-size: 12.5px;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+.unit-banner .unit-outcome .tgt { flex-shrink: 0; font-size: 13px; }
+.unit-banner.locked { filter: saturate(0.35); opacity: 0.72; }
+
+.unit-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: var(--r-full);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  border: 1.5px solid currentColor;
+  white-space: nowrap;
+}
+
+/* thin per-unit progress strip at banner bottom */
+.unit-strip {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 5px;
+  background: rgba(3, 7, 18, 0.4);
+}
+.unit-strip .fill {
+  height: 100%;
+  transition: width 700ms var(--ease-spring);
+}
+
+/* ── Node canvas ── */
+.path-canvas {
+  position: relative;
+}
+.path-canvas svg.beads {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.node-pos {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  display: grid;
+  place-items: center;
+}
+
+@keyframes path-ring-pulse {
+  0% { transform: scale(0.92); opacity: 0.9; }
+  70% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+@keyframes path-bubble-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes path-crown-sheen {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.22); }
+}
+
+.path-node {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transform: translateY(0);
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              filter var(--dur-fast) var(--ease-out);
+}
+.path-node:hover { filter: brightness(1.1); transform: translateY(-2px); }
+.path-node:active { transform: translateY(5px); }
+
+.path-node .check {
+  color: #fff;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35));
+}
+
+.path-node.is-locked {
+  background: linear-gradient(180deg, #222e52, #182240);
+  box-shadow: 0 6px 0 #0c1329;
+  color: var(--text-3);
+}
+.path-node.is-locked:active { transform: translateY(0); box-shadow: 0 6px 0 #0c1329; }
+.path-node.is-locked .node-ico { filter: grayscale(1) brightness(0.62); opacity: 0.7; }
+.path-node.is-locked .lock-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -1px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  font-size: 12px;
+  border-radius: 50%;
+  background: #0e1834;
+  border: 2px solid #26335c;
+  filter: none;
+  opacity: 1;
+}
+
+/* pulsing gold ring on the current node */
+.node-ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  pointer-events: none;
+}
+.node-ring.pulse { animation: path-ring-pulse 1.7s var(--ease-out) infinite; }
+.node-ring.still { opacity: 0.4; }
+
+/* START bubble */
+.start-bubble {
+  position: absolute;
+  bottom: calc(100% + 22px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+}
+.start-bubble .bb {
+  animation: path-bubble-bounce 1.5s ease-in-out infinite;
+  position: relative;
+  padding: 7px 16px 6px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #131f42, #0d1730);
+  border: 2px solid var(--gold);
+  color: var(--gold-bright);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  box-shadow: 0 6px 22px rgba(3, 7, 18, 0.6), var(--glow-gold);
+  white-space: nowrap;
+}
+.start-bubble .bb::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #0d1730;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+}
+
+/* locked-tap tooltip */
+.locked-tip {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  pointer-events: none;
+  animation: pop-in var(--dur-med) var(--ease-spring) both;
+}
+.locked-tip .bb {
+  position: relative;
+  padding: 7px 14px;
+  border-radius: 12px;
+  background: #2a1420;
+  border: 1.5px solid rgba(255, 90, 120, 0.6);
+  color: #ff9cb0;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(3, 7, 18, 0.6);
+}
+.locked-tip .bb::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #2a1420;
+  border-right: 1.5px solid rgba(255, 90, 120, 0.6);
+  border-bottom: 1.5px solid rgba(255, 90, 120, 0.6);
+}
+
+/* crown cap for completed units */
+.crown-node {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  background: linear-gradient(180deg, #ffd970, #f0a020);
+  box-shadow: 0 5px 0 #9c6200, 0 0 26px rgba(255, 176, 32, 0.4);
+  animation: path-crown-sheen 2.6s ease-in-out infinite;
+}
+
+/* ── Dividers & flourishes ── */
+.path-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 176, 32, 0.5);
+  font-size: 11px;
+  margin: 4px 8px 20px;
+}
+.path-divider .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148, 173, 224, 0.28));
+}
+.path-divider .line:last-child {
+  background: linear-gradient(90deg, rgba(148, 173, 224, 0.28), transparent);
+}
+.path-divider .dia { font-size: 14px; color: rgba(255, 176, 32, 0.75); }
+
+.path-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: -6px 0 18px;
+}
+.path-flourish .say {
+  padding: 10px 16px;
+  border-radius: 16px 16px 16px 4px;
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-1);
+  font-size: 13.5px;
+  font-weight: 700;
+  max-width: 250px;
+}
+.path-flourish .say .thai { color: var(--gold-bright); }
+
+/* journey finale */
+.path-finale {
+  text-align: center;
+  padding: 8px 0 26px;
+  color: var(--text-2);
+}
+.path-finale .lantern { font-size: 40px; animation: float-y 3s ease-in-out infinite; display: inline-block; }
+.path-finale .t { font-weight: 800; font-size: 15px; color: var(--text-1); margin-top: 8px; }
+
+/* ── Floating current-unit mini-header ── */
+@keyframes path-sticky-in {
+  0% { opacity: 0; transform: translate(-50%, -14px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+.path-sticky {
+  position: fixed;
+  top: calc(var(--hud-h) + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: min(560px, calc(100vw - 28px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: var(--r-lg);
+  background: rgba(11, 18, 38, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-pop);
+  animation: path-sticky-in 320ms var(--ease-spring) both;
+}
+.path-sticky .mini-emoji {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 21px;
+  border-radius: 13px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.14), inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+}
+.path-sticky .mini-eyebrow {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+.path-sticky .mini-title {
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .path-hero h1 { font-size: 28px; }
+  .unit-banner { padding: 15px 16px; gap: 13px; }
+  .unit-banner .unit-emoji { width: 50px; height: 50px; font-size: 26px; border-radius: 15px; }
+  .unit-banner h2 { font-size: 18px; }
+  .path-node { width: 66px; height: 66px; font-size: 25px; }
+  .path-sticky .mini-title { font-size: 14px; }
+}
