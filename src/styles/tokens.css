@@ -1,0 +1,77 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Chai Thai design tokens.
+   Identity: premium "Thai night market" — deep indigo nights, lantern golds,
+   jade neon, orchid violets. Chunky, rounded, tactile. AAA-game menu energy.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Surfaces */
+  --bg-0: #070c1a;
+  --bg-1: #0c1428;
+  --bg-2: #121d3a;
+  --bg-3: #1a2748;
+  --surface: rgba(22, 33, 62, 0.72);
+  --surface-solid: #16213e;
+  --surface-raised: #1d2b52;
+  --stroke: rgba(148, 173, 224, 0.16);
+  --stroke-strong: rgba(148, 173, 224, 0.30);
+
+  /* Brand accents */
+  --gold: #ffb020;
+  --gold-bright: #ffc94d;
+  --gold-deep: #cc7a00;
+  --mango: #ff8a3d;
+  --jade: #2ee6a8;
+  --jade-deep: #0fa87a;
+  --orchid: #b48cff;
+  --orchid-deep: #7d54d4;
+  --sky: #4cc9ff;
+  --sky-deep: #1a8fd0;
+  --coral: #ff5a78;
+  --coral-deep: #d13a56;
+  --lime: #b8e94c;
+
+  /* Text */
+  --text-0: #f4f7ff;
+  --text-1: #b9c6e4;
+  --text-2: #8494b8;
+  --text-3: #5a6a8f;
+
+  /* Semantic */
+  --correct: var(--jade);
+  --correct-bg: rgba(46, 230, 168, 0.12);
+  --wrong: var(--coral);
+  --wrong-bg: rgba(255, 90, 120, 0.12);
+  --xp: var(--gold);
+  --streak: var(--mango);
+
+  /* Typography */
+  --font-display: 'Baloo 2 Variable', 'Baloo 2', system-ui, sans-serif;
+  --font-thai: 'Noto Sans Thai Looped', 'Noto Sans Thai Variable', 'Noto Sans Thai', sans-serif;
+  --font-thai-modern: 'Noto Sans Thai Variable', 'Noto Sans Thai', sans-serif;
+
+  /* Radii */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --r-full: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 10px 30px rgba(3, 7, 18, 0.55), 0 2px 8px rgba(3, 7, 18, 0.35);
+  --shadow-pop: 0 18px 50px rgba(3, 7, 18, 0.65);
+  --glow-gold: 0 0 24px rgba(255, 176, 32, 0.35);
+  --glow-jade: 0 0 24px rgba(46, 230, 168, 0.35);
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med: 260ms;
+  --dur-slow: 480ms;
+
+  /* Layout */
+  --hud-h: 64px;
+  --maxw: 1120px;
+  --maxw-lesson: 720px;
+}
