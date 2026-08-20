@@ -1,7 +1,7 @@
 /**
- * E2E playthrough: plays a full lesson end-to-end by tapping through every
- * exercise (answers may be wrong — the requeue system must still converge),
- * then asserts the session completes and XP is awarded.
+ * E2E playthrough: plays a full lesson end-to-end, answering CORRECTLY via
+ * the dev-only window.__exercise hook, then asserts the session completes,
+ * XP is awarded, and lesson progress advances.
  *
  * Usage: node scripts/playthrough.mjs [unitId] [lessonIndex]
  */
@@ -31,15 +31,43 @@ await page.waitForTimeout(1500)
 
 const xpBefore = await page.evaluate(() => JSON.parse(localStorage.getItem('chai-thai-progress-v1') ?? '{}')?.state?.xp ?? 0)
 
+/** Click the .choice button whose text includes `needle`. */
+async function clickChoice(needle) {
+  const choices = page.locator('.choice')
+  const n = await choices.count()
+  for (let i = 0; i < n; i++) {
+    const text = (await choices.nth(i).innerText()).replace(/\s+/g, ' ')
+    if (text.includes(needle)) {
+      await choices.nth(i).click()
+      return true
+    }
+  }
+  return false
+}
+
+/** Click the bank tile whose Thai text equals `thai` (not already used). */
+async function clickTile(thai) {
+  const tiles = page.locator('.tile:not(.in-answer):not(.used)')
+  const n = await tiles.count()
+  for (let i = 0; i < n; i++) {
+    const t = (await tiles.nth(i).locator('.tile-thai').innerText()).trim()
+    if (t === thai) {
+      await tiles.nth(i).click()
+      return true
+    }
+  }
+  return false
+}
+
 let steps = 0
 let completed = false
-const MAX_STEPS = 400
+const MAX_STEPS = 250
+const kindCounts = {}
 
 while (steps < MAX_STEPS) {
   steps++
-  await page.waitForTimeout(220)
+  await page.waitForTimeout(180)
 
-  // Session complete? (end screen has "Lesson complete!"/"Perfect lesson!")
   const endVisible = await page.locator('text=/lesson complete|perfect lesson/i').first().isVisible().catch(() => false)
   if (endVisible) {
     completed = true
@@ -53,57 +81,92 @@ while (steps < MAX_STEPS) {
     continue
   }
 
-  // Intro card → Got it / Continue.
-  const intro = page.locator('[data-testid="continue"]').first()
-  if (await intro.isVisible().catch(() => false)) {
-    await intro.click()
-    continue
-  }
+  const ex = await page.evaluate(() => {
+    const e = window.__exercise
+    return e ? JSON.parse(JSON.stringify(e)) : null
+  })
+  if (!ex) continue
+  kindCounts[ex.kind] = (kindCounts[ex.kind] ?? 0) + 1
 
-  // Match pairs: click cards until cleared (brute force pairing).
-  const matchHeader = await page.locator('text=Match the pairs').isVisible().catch(() => false)
-  if (matchHeader) {
-    const cards = page.locator('.choice:not(.correct)')
-    const n = await cards.count()
-    if (n >= 2) {
-      // Click first available, then try others until a pair clears.
-      await cards.nth(0).click()
-      for (let i = 1; i < n; i++) {
-        await cards.nth(i).click()
+  const check = page.locator('[data-testid="check"]')
+
+  switch (ex.kind) {
+    case 'intro-word':
+    case 'intro-pattern':
+    case 'intro-char': {
+      const btn = page.locator('[data-testid="continue"]').first()
+      if (await btn.isVisible().catch(() => false)) await btn.click()
+      break
+    }
+    case 'choice-thai-en':
+    case 'choice-audio':
+      await clickChoice(ex.word.en)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'choice-en-thai':
+      await clickChoice(ex.word.thai)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'char-sound':
+      await clickChoice(ex.consonant.initial)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'sound-char':
+      await clickChoice(ex.consonant.char)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'read-syllable':
+      await clickChoice(ex.drill.roman)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'comprehend':
+      await clickChoice(ex.sentence.en)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    case 'tone-pick': {
+      const target = ex.play === 'a' ? ex.pair.a : ex.pair.b
+      await clickChoice(target.thai)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    }
+    case 'type-roman': {
+      const input = page.locator('input[placeholder*="romanization"]')
+      await input.fill(ex.word.roman)
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    }
+    case 'arrange':
+    case 'listen-arrange': {
+      const words = await page.evaluate(() => window.__registryWords ?? null)
+      for (const id of ex.sentence.wordIds) {
+        const thai = words?.[id]
+        if (thai) await clickTile(thai)
+        await page.waitForTimeout(60)
+      }
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    }
+    case 'builder': {
+      const words = await page.evaluate(() => window.__registryWords ?? null)
+      for (const id of ex.expectedIds) {
+        const thai = words?.[id]
+        if (thai) await clickTile(thai)
+        await page.waitForTimeout(60)
+      }
+      if (await check.isEnabled().catch(() => false)) await check.click()
+      break
+    }
+    case 'match-pairs': {
+      for (const w of ex.words) {
+        await clickChoice(w.thai)
+        await page.waitForTimeout(100)
+        await clickChoice(w.en)
         await page.waitForTimeout(140)
       }
+      break
     }
-    continue
-  }
-
-  // Choice exercise: pick option 1, then Check.
-  const check = page.locator('[data-testid="check"]')
-  const choices = page.locator('.choice')
-  if ((await choices.count()) > 0) {
-    await choices.first().click()
-    await page.waitForTimeout(120)
-    if (await check.isEnabled().catch(() => false)) await check.click()
-    continue
-  }
-
-  // Typing exercise: type the hinted romanization start (wrong is fine).
-  const input = page.locator('input[placeholder*="romanization"]')
-  if (await input.isVisible().catch(() => false)) {
-    await input.fill('test')
-    if (await check.isEnabled().catch(() => false)) await check.click()
-    continue
-  }
-
-  // Arrange/builder: tap every bank tile then Check.
-  const bankTiles = page.locator('.tile:not(.in-answer):not(.used)')
-  const bankCount = await bankTiles.count()
-  if (bankCount > 0) {
-    for (let i = 0; i < bankCount; i++) {
-      await page.locator('.tile:not(.in-answer):not(.used)').first().click().catch(() => {})
-      await page.waitForTimeout(80)
-    }
-    if (await check.isEnabled().catch(() => false)) await check.click()
-    continue
+    default:
+      break
   }
 }
 
@@ -111,14 +174,9 @@ const xpAfter = await page.evaluate(() => JSON.parse(localStorage.getItem('chai-
 const lessonProgress = await page.evaluate(() => JSON.parse(localStorage.getItem('chai-thai-progress-v1') ?? '{}')?.state?.lessonProgress ?? {})
 
 console.log(JSON.stringify({
-  unitId,
-  lessonIndex,
-  completed,
-  steps,
-  xpBefore,
-  xpAfter,
-  xpGained: xpAfter - xpBefore,
-  lessonProgress,
+  unitId, lessonIndex, completed, steps,
+  xpBefore, xpAfter, xpGained: xpAfter - xpBefore,
+  lessonProgress, kindCounts,
   consoleErrors: errors.slice(0, 8),
 }, null, 2))
 

@@ -54,6 +54,14 @@ export default function App() {
     // Test/screenshot hooks: navigate and seed state from automation.
     ;(window as any).__nav = (screen: unknown) => useRouter.getState().go(screen as any)
     ;(window as any).__seed = (patch: Record<string, unknown>) => useProgress.setState(patch as any)
+    if (import.meta.env.DEV) {
+      // e2e bot needs word-id → Thai to click the right tiles.
+      void import('@/content').then(({ registry }) => {
+        ;(window as any).__registryWords = Object.fromEntries(
+          [...registry.words].map(([id, w]) => [id, w.thai]),
+        )
+      })
+    }
     ;(window as any).__sessionEnd = () => {
       void import('@/state/session').then(({ useSession }) => {
         useSession.setState({

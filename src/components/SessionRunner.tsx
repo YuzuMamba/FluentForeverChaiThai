@@ -117,6 +117,12 @@ export default function SessionRunner({ meta, exercises, onExit }: Props) {
   const current = session.queue[session.index]
   const [feedbackExtras, setFeedbackExtras] = useState<{ answer?: { thai: string; roman?: string; en?: string }; detail?: string }>({})
 
+  useEffect(() => {
+    // Test hook: expose the live exercise so the e2e playthrough bot can
+    // answer correctly (dev server only; stripped from production builds).
+    if (import.meta.env.DEV) (window as any).__exercise = current ?? null
+  }, [current])
+
   const api: ExerciseApi = useMemo(
     () => ({
       submit: (correct, opts) => {
