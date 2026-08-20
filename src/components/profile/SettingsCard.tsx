@@ -2,7 +2,8 @@
  * Settings — chunky sound switch, romanization segmented control, TTS speed
  * slider with live preview, and a guarded reset-everything danger row.
  */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { sfx } from '@/audio/sfx'
 import { useProgress, type RomanizationMode } from '@/state/progress'
@@ -23,6 +24,21 @@ export default function SettingsCard({ className = '', style }: { className?: st
   const resetAll = useProgress((s) => s.resetAll)
   const go = useRouter((s) => s.go)
   const [confirming, setConfirming] = useState(false)
+
+  // While the confirm dialog is open: lock page scroll and close on Escape.
+  useEffect(() => {
+    if (!confirming) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setConfirming(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [confirming])
 
   const toggleSound = () => {
     const next = !settings.sound
@@ -136,55 +152,60 @@ export default function SettingsCard({ className = '', style }: { className?: st
         </div>
       </div>
 
-      <AnimatePresence>
-        {confirming && (
-          <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            onClick={() => setConfirming(false)}
-          >
+      {/* Portal escapes .screen-content's stacking context so the overlay
+          dims the HUD and bottom nav too. */}
+      {createPortal(
+        <AnimatePresence>
+          {confirming && (
             <motion.div
-              className="modal-card"
-              role="alertdialog"
-              aria-modal="true"
-              aria-label="Confirm reset progress"
-              initial={{ scale: 0.82, y: 26, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.88, y: 12, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              onClick={() => setConfirming(false)}
             >
-              <div style={{ display: 'grid', placeItems: 'center' }}>
-                <Mascot mood="sad" size={112} />
-              </div>
-              <h2>Erase everything?</h2>
-              <p>
-                Your XP, streak and every word Chang helped you remember will be
-                gone for good. There is no undo.
-              </p>
-              <div className="modal-actions">
-                <ChunkyButton variant="ghost" onClick={() => setConfirming(false)}>
-                  Keep it
-                </ChunkyButton>
-                <ChunkyButton
-                  variant="coral"
-                  onClick={() => {
-                    if (settings.sound) sfx.play('whoosh')
-                    resetAll()
-                    setConfirming(false)
-                    go({ name: 'home' })
-                  }}
-                >
-                  Erase it all
-                </ChunkyButton>
-              </div>
+              <motion.div
+                className="modal-card"
+                role="alertdialog"
+                aria-modal="true"
+                aria-label="Confirm reset progress"
+                initial={{ scale: 0.82, y: 26, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.88, y: 12, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div style={{ display: 'grid', placeItems: 'center' }}>
+                  <Mascot mood="sad" size={112} />
+                </div>
+                <h2>Erase everything?</h2>
+                <p>
+                  Your XP, streak and every word Chang helped you remember will be
+                  gone for good. There is no undo.
+                </p>
+                <div className="modal-actions">
+                  <ChunkyButton variant="ghost" onClick={() => setConfirming(false)}>
+                    Keep it
+                  </ChunkyButton>
+                  <ChunkyButton
+                    variant="coral"
+                    onClick={() => {
+                      if (settings.sound) sfx.play('whoosh')
+                      resetAll()
+                      setConfirming(false)
+                      go({ name: 'home' })
+                    }}
+                  >
+                    Erase it all
+                  </ChunkyButton>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </>
   )
 }

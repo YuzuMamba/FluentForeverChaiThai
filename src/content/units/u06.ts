@@ -50,31 +50,10 @@ const words: Word[] = [
     note: 'The standard "and" — you\'ll see it on every menu and sign. In fast casual speech Thais often say กับ (gàp) instead, but และ is always understood.',
   },
   {
-    id: 'w.chicken', thai: 'ไก่', roman: 'gài', en: 'chicken',
-    syllables: [{ thai: 'ไก่', roman: 'gai', tone: 'low' }],
-    pos: 'noun', emoji: '🐔', tags: ['core', 'food'],
-    note: 'Follows the dish name, never precedes it: ข้าวผัดไก่ = fried rice + chicken. Also the acrophonic name of the first Thai letter, ก ไก่.',
-  },
-  {
     id: 'w.pork', thai: 'หมู', roman: 'mǔu', en: 'pork', enAlt: ['pig'],
     syllables: [{ thai: 'หมู', roman: 'muu', tone: 'rising' }],
     pos: 'noun', emoji: '🐷', tags: ['core', 'food'],
     note: 'Both the animal and the meat — Thailand\'s default protein. หมู also means "easy" in slang: งานหมูๆ = "a piece-of-cake job".',
-  },
-  {
-    id: 'w.egg', thai: 'ไข่', roman: 'kài', en: 'egg',
-    syllables: [{ thai: 'ไข่', roman: 'kai', tone: 'low' }],
-    pos: 'noun', emoji: '🥚', tags: ['food'],
-    note: 'ไข่ (kài, low) vs ไก่ (gài, low) — egg vs chicken differ only in the first consonant\'s puff of air. A classic listening trap at the fried-rice stall.',
-  },
-  {
-    id: 'w.fried-rice', thai: 'ข้าวผัด', roman: 'kâao-pàt', en: 'fried rice',
-    syllables: [
-      { thai: 'ข้าว', roman: 'kaao', tone: 'falling' },
-      { thai: 'ผัด', roman: 'pat', tone: 'low' },
-    ],
-    pos: 'noun', emoji: '🍛', tags: ['core', 'food'],
-    note: 'ข้าว rice + ผัด stir-fried. The safest order in any shop in Thailand — add ไก่, หมู, or ไข่ after it to pick your protein.',
   },
   {
     id: 'w.ice', thai: 'น้ำแข็ง', roman: 'náam-kɛ̌ng', en: 'ice',
@@ -84,12 +63,6 @@ const words: Word[] = [
     ],
     pos: 'noun', emoji: '🧊', tags: ['drink', 'object'],
     note: 'Literally "hard water". In tropical heat everything comes with ice — ask ขอน้ำแข็งหน่อย and a bucket of it appears.',
-  },
-  {
-    id: 'w.tea', thai: 'ชา', roman: 'chaa', en: 'tea',
-    syllables: [{ thai: 'ชา', roman: 'chaa', tone: 'mid' }],
-    pos: 'noun', emoji: '🍵', tags: ['core', 'drink'],
-    note: 'Order ชาไทย for the famous orange Thai iced tea — sweet, milky, over ice. Plain hot tea is ชาร้อน.',
   },
   {
     id: 'w.menu', thai: 'เมนู', roman: 'mee-nuu', en: 'menu',

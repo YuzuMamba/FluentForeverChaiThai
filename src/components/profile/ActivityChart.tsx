@@ -198,7 +198,8 @@ export default function ActivityChart({ history, goalXp, className = '', style }
             )
           })}
 
-          {/* Daily goal line */}
+          {/* Daily goal line (recedes when the chart is empty so the
+              empty-state note stays legible) */}
           <line
             x1={PAD_L}
             x2={W - PAD_R}
@@ -207,7 +208,7 @@ export default function ActivityChart({ history, goalXp, className = '', style }
             stroke="var(--jade)"
             strokeWidth="1.5"
             strokeDasharray="5 6"
-            opacity="0.65"
+            opacity={totalXp === 0 ? 0.22 : 0.65}
           />
         </svg>
 

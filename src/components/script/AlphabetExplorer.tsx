@@ -1,7 +1,8 @@
 /**
  * Alphabet explorer: tabbed Consonants | Vowels reference.
  * Consonant cards flip to reveal sounds + audio; vowels show length,
- * position, and an example word. Fully empty-tolerant while content lands.
+ * position, and an example word. While the alphabet content is still being
+ * authored, shimmering ghost cards hold the space.
  */
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -95,15 +96,24 @@ function VowelCard({ v, index }: { v: ThaiVowel; index: number }) {
   )
 }
 
-function ExplorerEmpty({ what }: { what: string }) {
+/** Shimmering ghost cards + mascot note, shown while content is authored. */
+function ExplorerEmpty({ title, sub, cards }: { title: string; sub: string; cards: number }) {
   return (
-    <div className="card script-empty anim-pop">
-      <Mascot mood="think" size={90} />
-      <div>
-        <div className="t">The {what} cards are still being carved</div>
-        <div className="s">
-          Chang is polishing every letter of the alphabet — they'll appear here the moment
-          the ink dries.
+    <div className="ghost-zone">
+      <div className="glyph-grid ghost-grid" aria-hidden>
+        {Array.from({ length: cards }, (_, i) => (
+          <div key={i} className="gcard anim-pop" style={{ animationDelay: `${Math.min(i, 16) * 40}ms` }}>
+            <span className="skel gglyph" />
+            <span className="skel" style={{ width: '62%', height: 10 }} />
+            <span className="skel" style={{ width: '40%', height: 8 }} />
+          </div>
+        ))}
+      </div>
+      <div className="card script-empty anim-pop" style={{ animationDelay: '220ms' }}>
+        <Mascot mood="think" size={88} />
+        <div>
+          <div className="t">{title}</div>
+          <div className="s">{sub}</div>
         </div>
       </div>
     </div>
@@ -177,7 +187,11 @@ export default function AlphabetExplorer({ consonants, vowels }: Props) {
               </span>
             </div>
             {consonants.length === 0 ? (
-              <ExplorerEmpty what="consonant" />
+              <ExplorerEmpty
+                cards={14}
+                title="44 consonants are on their way"
+                sub="Chang is inking every letter, chicken ก to owl ฮ — each with its class, its sound, and its story. They glow here the moment the ink dries."
+              />
             ) : (
               <div className="glyph-grid">
                 {consonants.map((c, i) => (
@@ -209,7 +223,11 @@ export default function AlphabetExplorer({ consonants, vowels }: Props) {
               </span>
             </div>
             {vowels.length === 0 ? (
-              <ExplorerEmpty what="vowel" />
+              <ExplorerEmpty
+                cards={8}
+                title="The vowel constellation is still rising"
+                sub="Every vowel with its length, its orbit position, and a word you'll actually use. The full set lands here soon."
+              />
             ) : (
               <div className="glyph-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(215px, 1fr))' }}>
                 {vowels.map((v, i) => (

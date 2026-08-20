@@ -6,9 +6,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { registry } from '@/content'
 import { toneMarked, TONE_INFO } from '@/content/schema'
 import { generateScriptLesson } from '@/engine/lessons'
+import type { Exercise } from '@/engine/exercises'
 import { useProgress } from '@/state/progress'
 import { useRouter } from '@/state/router'
 import SessionRunner from '@/components/SessionRunner'
+import AudioButton from '@/components/AudioButton'
 import ChunkyButton from '@/components/ChunkyButton'
 import Mascot from '@/components/Mascot'
 import ToneBadge from '@/components/ToneBadge'
@@ -55,12 +57,18 @@ function resolveLetters(chars: string[]): LetterInfo[] {
 export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
   const go = useRouter((s) => s.go)
   const ensureCards = useProgress((s) => s.ensureCards)
-  const [running, setRunning] = useState(false)
+  const [exercises, setExercises] = useState<Exercise[] | null>(null)
 
   const lesson = useMemo(
     () => registry.scriptLessons.find((l) => l.id === lessonId) ?? null,
     [lessonId],
   )
+
+  /** How many graded drills this lesson generates (stable preview count). */
+  const drillCount = useMemo(() => {
+    if (!lesson) return 0
+    return generateScriptLesson(registry, lesson, 12345).filter((e) => e.kind !== 'intro-char').length
+  }, [lesson])
 
   useEffect(() => {
     if (!lesson) return
@@ -89,11 +97,11 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
     )
   }
 
-  if (running) {
+  if (exercises) {
     return (
       <SessionRunner
         meta={{ type: 'script', scriptLessonId: lesson.id, title: lesson.title }}
-        exercises={generateScriptLesson(registry, lesson, Date.now() % 1000000)}
+        exercises={exercises}
         onExit={() => go({ name: 'script' })}
       />
     )
@@ -101,7 +109,6 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
 
   const meta = KIND_META[lesson.kind]
   const letters = resolveLetters(lesson.newChars)
-  const orderLabel = `Lesson ${lesson.order} · ${meta.label}`
   const spStyle: React.CSSProperties & Record<string, string> = { '--sp-color': meta.color }
 
   return (
@@ -129,13 +136,11 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
               <h1>{lesson.title}</h1>
               <div className="splash-sub">{lesson.subtitle}</div>
               <div className="splash-meta">
-                <span className="splash-stat">🏷️ {orderLabel}</span>
+                <span className="splash-stat">🏷️ Lesson {lesson.order} · {meta.label}</span>
                 {letters.length > 0 && (
                   <span className="splash-stat">✍️ {letters.length} new letter{letters.length === 1 ? '' : 's'}</span>
                 )}
-                {lesson.readingDrills.length > 0 && (
-                  <span className="splash-stat">📖 {Math.min(lesson.readingDrills.length, 8)} reading drills</span>
-                )}
+                {drillCount > 0 && <span className="splash-stat">🎯 {drillCount} drills</span>}
               </div>
             </div>
 
@@ -160,6 +165,7 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
                         <div className="slchar thai">{l.glyph}</div>
                         <div className="slname">{l.name}</div>
                         {l.sound && <div className="slsound">{l.sound}</div>}
+                        <AudioButton thai={l.glyph} small label={`Hear ${l.glyph}`} />
                       </div>
                     )
                   })}
@@ -198,10 +204,25 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
             )}
 
             <div className="splash-cta">
-              <ChunkyButton variant="gold" size="lg" onClick={() => setRunning(true)}>
-                🏮 Start lesson
-              </ChunkyButton>
-              <div className="cta-hint">Miss one? It comes back until you nail it.</div>
+              {drillCount > 0 ? (
+                <>
+                  <ChunkyButton
+                    variant="gold"
+                    size="lg"
+                    onClick={() => setExercises(generateScriptLesson(registry, lesson, Date.now() % 1000000))}
+                  >
+                    🏮 Start lesson
+                  </ChunkyButton>
+                  <div className="cta-hint">Miss one? It comes back until you nail it.</div>
+                </>
+              ) : (
+                <>
+                  <ChunkyButton variant="ghost" disabled>
+                    🖋️ Drills arriving soon
+                  </ChunkyButton>
+                  <div className="cta-hint">This lesson's exercises are still being inked.</div>
+                </>
+              )}
             </div>
           </div>
         </div>

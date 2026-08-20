@@ -2,6 +2,8 @@
  * The script course trail: a wrapping run of chunky stepping-stone nodes,
  * one per script lesson. Locked until the previous lesson is complete;
  * completed stones carry a jade check; the current stone pulses gold.
+ * While the course content is still being authored, a ghost trail of unlit
+ * lanterns keeps the path visible.
  */
 import { useEffect, useRef, useState } from 'react'
 import type { ScriptLesson } from '@/content/schema'
@@ -98,6 +100,36 @@ function TrailNode({ lesson, index, state, onOpen }: NodeProps) {
   )
 }
 
+/** Unlit-lantern placeholder trail shown while the course is being authored. */
+function GhostTrail() {
+  return (
+    <div className="trail-ghost-zone">
+      <div className="script-trail ghost" aria-hidden>
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={i} className="trail-item ghost-item anim-pop" style={{ animationDelay: `${i * 70}ms` }}>
+            <div className="trail-node is-ghost" style={{ animationDelay: `${(i % 3) * 600}ms` }}>
+              <span className="trail-ico">🏮</span>
+            </div>
+            <span className="skel" style={{ width: 70, height: 11 }} />
+            <span className="skel" style={{ width: 46, height: 8 }} />
+          </div>
+        ))}
+      </div>
+      <div className="card script-empty anim-pop" style={{ animationDelay: '240ms' }}>
+        <Mascot mood="think" size={92} />
+        <div>
+          <div className="t">The scribes are still inking these pages…</div>
+          <div className="s">
+            The full reading course — every consonant, vowel, and tone rule — is on its
+            way. The lanterns light up the moment each lesson lands. Meanwhile, keep
+            stacking words on the Lantern Road!
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 interface Props {
   lessons: ScriptLesson[]
   completed: string[]
@@ -105,20 +137,7 @@ interface Props {
 }
 
 export default function ScriptTrail({ lessons, completed, onOpen }: Props) {
-  if (lessons.length === 0) {
-    return (
-      <div className="card script-empty anim-pop">
-        <Mascot mood="think" size={96} />
-        <div>
-          <div className="t">The scribes are still inking these pages…</div>
-          <div className="s">
-            The full reading course — every consonant, vowel, and tone rule — is on its way.
-            Meanwhile, keep stacking words on the Lantern Road!
-          </div>
-        </div>
-      </div>
-    )
-  }
+  if (lessons.length === 0) return <GhostTrail />
 
   const doneSet = new Set(completed)
   let currentFound = false

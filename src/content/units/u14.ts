@@ -65,28 +65,25 @@ const words: Word[] = [
     note: 'Also means "to command" — when you สั่ง food, you\'re giving orders. Vendors ask: จะสั่งอะไร "what\'ll you order?"',
   },
   {
-    id: 'w.chicken', thai: 'ไก่', roman: 'gài', en: 'chicken',
-    syllables: [{ thai: 'ไก่', roman: 'gai', tone: 'low' }],
-    pos: 'noun', emoji: '🐔', tags: ['food'],
-    note: 'Stick it after any dish name: ผัดไทยไก่. Careful: ไก่ (gài, chicken) vs ไข่ (kài, egg) — one puff of air apart.',
+    id: 'w.sticky-rice', thai: 'ข้าวเหนียว', roman: 'kâao-nǐao', en: 'sticky rice', literal: 'rice + sticky',
+    syllables: [
+      { thai: 'ข้าว', roman: 'kaao', tone: 'falling' },
+      { thai: 'เหนียว', roman: 'niao', tone: 'rising' },
+    ],
+    pos: 'noun', emoji: '🍚', tags: ['food'],
+    note: 'Eaten with your hands: pinch off a ball, scoop up the som tam. ส้มตำ + ไก่ย่าง + ข้าวเหนียว is THE classic street set.',
   },
   {
-    id: 'w.pork', thai: 'หมู', roman: 'mǔu', en: 'pork', enAlt: ['pig'],
-    syllables: [{ thai: 'หมู', roman: 'muu', tone: 'rising' }],
-    pos: 'noun', emoji: '🐷', tags: ['food'],
-    note: 'Both the animal and the meat. Bonus slang: หมูๆ = "easy peasy" — a piece of pork, not cake.',
+    id: 'w.grilled', thai: 'ย่าง', roman: 'yâang', en: 'grilled', enAlt: ['grill', 'to grill'],
+    syllables: [{ thai: 'ย่าง', roman: 'yaang', tone: 'falling' }],
+    pos: 'verb', emoji: '🔥', tags: ['action'],
+    note: 'A verb that rides after the meat, like toppings do: ไก่ย่าง grilled chicken, หมูย่าง grilled pork. Follow the charcoal smoke to find it.',
   },
   {
     id: 'w.shrimp', thai: 'กุ้ง', roman: 'gûng', en: 'shrimp', enAlt: ['prawn'],
     syllables: [{ thai: 'กุ้ง', roman: 'gung', tone: 'falling' }],
     pos: 'noun', emoji: '🦐', tags: ['food'],
     note: 'The classic pad thai topping: ผัดไทยกุ้ง. Falling tone — let it drop.',
-  },
-  {
-    id: 'w.egg', thai: 'ไข่', roman: 'kài', en: 'egg',
-    syllables: [{ thai: 'ไข่', roman: 'kai', tone: 'low' }],
-    pos: 'noun', emoji: '🥚', tags: ['food'],
-    note: 'ใส่ไข่ "add an egg" upgrades almost any street dish. A fried egg on top is ไข่ดาว — "star egg".',
   },
   {
     id: 'w.peanut', thai: 'ถั่ว', roman: 'tùa', en: 'peanuts', enAlt: ['beans', 'nuts'],
@@ -111,6 +108,11 @@ const sentences: Sentence[] = [
     id: 's.take-noodles-pork-m', wordIds: ['w.take', 'w.noodles', 'w.pork', 'w.polite-m'],
     en: "I'll take pork noodles. (male speaker)", enAlt: ['pork noodles, please'],
     literal: 'take | noodles | pork | ♂-polite', patternId: 'p.take-topping', tags: ['ordering'],
+  },
+  {
+    id: 's.grilled-chicken-sticky-rice-f', wordIds: ['w.take', 'w.chicken', 'w.grilled', 'w.and', 'w.sticky-rice', 'w.polite-f'],
+    en: 'And grilled chicken with sticky rice, please. (female speaker)', enAlt: ["i'll take grilled chicken and sticky rice"],
+    literal: 'take | chicken | grill(ed) | and | sticky rice | ♀-polite', tags: ['ordering'],
   },
   {
     id: 's.spicy-level-q-m', wordIds: ['w.spicy', 'w.q-mai', 'w.polite-m'],
@@ -257,10 +259,11 @@ const unitModule: UnitModule = {
       {
         id: 'd.u14-somtam',
         title: 'Som tam, made to order',
-        scene: 'Mali (♀) orders som tam from Lung Dam (♂) at his papaya-salad cart.',
+        scene: 'Mali (♀) orders the classic som tam set from Lung Dam (♂) at his papaya-salad cart.',
         lines: [
           { speaker: 'Lung Dam', sentenceId: 's.order-what-m' },
           { speaker: 'Mali', sentenceId: 's.som-tam-no-peanut-f' },
+          { speaker: 'Mali', sentenceId: 's.grilled-chicken-sticky-rice-f' },
           { speaker: 'Lung Dam', sentenceId: 's.spicy-level-q-m' },
           { speaker: 'Mali', sentenceId: 's.spicy-a-little-f' },
           { speaker: 'Lung Dam', sentenceId: 's.can-do-m' },
