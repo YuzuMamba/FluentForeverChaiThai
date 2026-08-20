@@ -54,7 +54,10 @@ function ExerciseHost({ exercise, api, exerciseKey }: { exercise: Exercise; api:
 }
 
 function SessionEnd({ onExit }: { onExit: () => void }) {
-  const result = useSession((s) => s.result())
+  // result() builds a fresh object each call, so it must not be used as a
+  // zustand selector (unstable snapshots trip React's getSnapshot check).
+  // The end screen is terminal — compute the result once on mount.
+  const result = useMemo(() => useSession.getState().result(), [])
   const meta = useSession((s) => s.meta)
   const accuracy = result.correct + result.wrong > 0
     ? Math.round((result.correct / (result.correct + result.wrong)) * 100)

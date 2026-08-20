@@ -898,6 +898,8 @@
   .script-hero h1 { font-size: 29px; }
   .script-hero .script-hero-sub { font-size: 14px; margin-inline: auto; }
   .script-hero .script-hero-stats { justify-content: center; }
+  /* extra row air so the floating START bubble clears the row above */
+  .script-trail { row-gap: 38px; }
   .trail-item { width: 108px; }
   .trail-item:not(:last-child)::before { top: 36px; left: calc(50% + 44px); width: calc(100% - 88px + 6px); }
   .trail-node { width: 70px; height: 70px; font-size: 29px; }
