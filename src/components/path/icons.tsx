@@ -12,6 +12,7 @@ export type IconName =
   | 'lock' | 'target' | 'wai' | 'people' | 'point' | 'rice' | 'baht'
   | 'noodles' | 'tuktuk' | 'clock' | 'family' | 'heart' | 'bag'
   | 'chili' | 'sunrise' | 'weather' | 'health' | 'calendar' | 'chat'
+  | 'flame' | 'bolt' | 'gem' | 'check' | 'sparkle' | 'sound' | 'letters' | 'trash'
 
 /* All paths drawn on a 24×24 grid, stroke-first, 2px, round joins. */
 const PATHS: Record<IconName, ReactNode> = {
@@ -36,10 +37,12 @@ const PATHS: Record<IconName, ReactNode> = {
   ),
   elephant: (
     <>
-      <path d="M5 12a7 7 0 0 1 14 0v2.4a2.6 2.6 0 0 1-2.6 2.6H15" />
-      <path d="M5 12v3.2A2.8 2.8 0 0 0 7.8 18H9" opacity={0.7} />
-      <path d="M12 11.4v5.8a2.4 2.4 0 0 0 2.4 2.4" />
-      <circle cx="9" cy="11.2" r="1" fill="currentColor" stroke="none" />
+      <path d="M7.1 7.6a3.6 3.6 0 1 0 .5 7" opacity={0.6} />
+      <path d="M16.9 7.6a3.6 3.6 0 1 1-.5 7" opacity={0.6} />
+      <circle cx="12" cy="10.4" r="5.5" />
+      <path d="M12 15.9v3a2.4 2.4 0 0 0 2.4 2.4" />
+      <circle cx="9.9" cy="9.9" r="0.95" fill="currentColor" stroke="none" />
+      <circle cx="14.1" cy="9.9" r="0.95" fill="currentColor" stroke="none" />
     </>
   ),
   book: (
@@ -197,6 +200,55 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M20.8 11.4c0 3.9-3.9 7-8.8 7-1 0-2-.1-2.9-.4L4 20l1.3-3.5a6.5 6.5 0 0 1-2.1-4.7c0-3.9 3.9-7.4 8.8-7.4s8.8 3.1 8.8 7z" />
       <path d="M8.4 11.4h.01M12 11.4h.01M15.6 11.4h.01" opacity={0.8} />
+    </>
+  ),
+  flame: (
+    <>
+      <path d="M12 3.4c.5 3-1.7 4.7-3.3 6.5a6.7 6.7 0 1 0 10 .5C16.6 7.6 13.4 6.6 12 3.4z" />
+      <path d="M12 20.4c-1.9 0-3.2-1.4-3.2-3.1 0-1.8 1.5-2.6 3.2-4.4 1.7 1.8 3.2 2.6 3.2 4.4 0 1.7-1.3 3.1-3.2 3.1z" opacity={0.6} />
+    </>
+  ),
+  bolt: (
+    <>
+      <path d="M13.2 3.2 5.8 13.3h4.4L10.8 20.8l7.4-10.1h-4.4l-.6-7.5z" />
+    </>
+  ),
+  gem: (
+    <>
+      <path d="M7.2 4.4h9.6L20.6 9 12 19.8 3.4 9l3.8-4.6z" />
+      <path d="M3.4 9h17.2M12 19.8 8.8 9l3.2-4.6L15.2 9 12 19.8" opacity={0.55} />
+    </>
+  ),
+  check: (
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <path d="m8.3 12.3 2.6 2.7 4.8-5.6" opacity={0.9} />
+    </>
+  ),
+  sparkle: (
+    <>
+      <path d="M11 4.2 12.7 9.3 17.8 11l-5.1 1.7L11 17.8l-1.7-5.1L4.2 11l5.1-1.7z" />
+      <path d="M18.4 15.4l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" opacity={0.65} />
+    </>
+  ),
+  sound: (
+    <>
+      <path d="M4 9.6h3l4.6-3.8v12.4L7 14.4H4z" />
+      <path d="M15.2 9.6a3.6 3.6 0 0 1 0 4.8M17.8 7.2a7 7 0 0 1 0 9.6" opacity={0.65} />
+    </>
+  ),
+  letters: (
+    <>
+      <path d="M3.4 17 7.5 6.6h.6L12.2 17M4.9 13.4h6" />
+      <circle cx="17.2" cy="14" r="2.9" opacity={0.7} />
+      <path d="M20.1 11.1V17" opacity={0.7} />
+    </>
+  ),
+  trash: (
+    <>
+      <path d="M4.8 7h14.4M9.8 7V5.2A1.7 1.7 0 0 1 11.5 3.5h1a1.7 1.7 0 0 1 1.7 1.7V7" />
+      <path d="M6.4 7l.8 11.8a1.9 1.9 0 0 0 1.9 1.7h5.8a1.9 1.9 0 0 0 1.9-1.7L17.6 7" />
+      <path d="M10 10.6v6M14 10.6v6" opacity={0.6} />
     </>
   ),
 }

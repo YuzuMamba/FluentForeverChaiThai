@@ -14,6 +14,7 @@ import Mascot from '@/components/Mascot'
 import WorldBackdrop from '@/three/WorldBackdrop'
 import UnitSection from '@/components/path/UnitSection'
 import StickyUnitHeader from '@/components/path/StickyUnitHeader'
+import LanternField, { KhomLoi } from '@/components/path/LanternField'
 import '@/components/path/path.css'
 
 /** Chang's trail-side encouragements, sprinkled between units. */
@@ -81,7 +82,8 @@ export default function HomeScreen() {
 
   return (
     <div className="screen">
-      <WorldBackdrop variant="dusk" />
+      <WorldBackdrop variant="dusk" lanterns={false} />
+      <LanternField />
       <TopHUD />
 
       {stuck && current && (
@@ -92,7 +94,7 @@ export default function HomeScreen() {
         />
       )}
 
-      <main className="screen-content">
+      <main className="screen-content path-content">
         {/* ── Hero ── */}
         <div className="path-hero anim-slide-up">
           <div className="path-eyebrow">
@@ -118,9 +120,8 @@ export default function HomeScreen() {
                 <div className="path-flourish" aria-hidden>
                   <Mascot mood={s.unlocked ? 'happy' : 'idle'} size={62} />
                   <div className="say">
-                    <span className="thai">{CHEERS[(s.index / 3 - 1) % CHEERS.length].thai}</span>
-                    {' '}
-                    {CHEERS[(s.index / 3 - 1) % CHEERS.length].en}
+                    <span className="say-thai thai">{CHEERS[(s.index / 3 - 1) % CHEERS.length].thai}</span>
+                    <span className="say-en">{CHEERS[(s.index / 3 - 1) % CHEERS.length].en}</span>
                   </div>
                 </div>
               )}
@@ -140,7 +141,7 @@ export default function HomeScreen() {
 
           {/* ── Finale ── */}
           <div className="path-finale">
-            <span className="lantern" aria-hidden>🏮</span>
+            <span className="lantern" aria-hidden><KhomLoi id="finale" size={40} /></span>
             <div className="t">
               {current ? 'The road goes on…' : 'You walked the whole road!'}
             </div>

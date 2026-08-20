@@ -7,13 +7,14 @@ import type { Unit } from '@/content/schema'
 import { LESSONS_PER_UNIT } from '@/engine/lessons'
 import PathNode, { type NodeState } from './PathNode'
 import { alpha, shade } from './color'
+import { Icon, UnitIcon, type IconName } from './icons'
 
-export const LESSON_META: Array<{ icon: string; label: string }> = [
-  { icon: '📖', label: 'New Words I' },
-  { icon: '📖', label: 'New Words II' },
-  { icon: '🧩', label: 'Patterns' },
-  { icon: '🎧', label: 'Listening' },
-  { icon: '🏆', label: 'Produce It' },
+export const LESSON_META: Array<{ icon: IconName; label: string }> = [
+  { icon: 'book', label: 'New Words I' },
+  { icon: 'book', label: 'New Words II' },
+  { icon: 'puzzle', label: 'Patterns' },
+  { icon: 'headphones', label: 'Listening' },
+  { icon: 'trophy', label: 'Produce It' },
 ]
 
 const SPACING = 104
@@ -48,10 +49,10 @@ export default function UnitSection({ unit, index, progress, unlocked, complete,
   }))
 
   const chip = complete
-    ? { text: '✓ DONE', color: shade(color, 0.35) }
+    ? { text: '✓ DONE', icon: null as IconName | null, color: shade(color, 0.35) }
     : unlocked
-      ? { text: `${progress} / ${LESSONS_PER_UNIT}`, color: shade(color, 0.35) }
-      : { text: '🔒 LOCKED', color: 'var(--text-3)' }
+      ? { text: `${progress} / ${LESSONS_PER_UNIT}`, icon: null as IconName | null, color: shade(color, 0.35) }
+      : { text: 'LOCKED', icon: 'lock' as IconName | null, color: 'var(--text-3)' }
 
   return (
     <section aria-label={`Unit ${unit.order}: ${unit.title}`}>
@@ -66,9 +67,9 @@ export default function UnitSection({ unit, index, progress, unlocked, complete,
         <div
           className="unit-emoji"
           aria-hidden
-          style={{ background: `linear-gradient(180deg, ${shade(color, 0.18)}, ${shade(color, -0.22)})` }}
+          style={{ background: `linear-gradient(180deg, ${shade(color, 0.18)}, ${shade(color, -0.22)})`, color: '#fff' }}
         >
-          {unit.emoji}
+          <UnitIcon emoji={unit.emoji} size={30} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="unit-eyebrow" style={{ color: shade(color, 0.4) }}>
@@ -77,11 +78,16 @@ export default function UnitSection({ unit, index, progress, unlocked, complete,
           <h2>{unit.title}</h2>
           <div className="unit-sub">{unit.subtitle}</div>
           <div className="unit-outcome">
-            <span className="tgt" aria-hidden>🎯</span>
+            <span className="tgt" aria-hidden>
+              <Icon name="target" size={15} strokeWidth={2.2} style={{ marginTop: 2, color: shade(color, 0.3) }} />
+            </span>
             <span>{unit.outcome}</span>
           </div>
         </div>
-        <span className="unit-chip" style={{ color: chip.color }}>{chip.text}</span>
+        <span className="unit-chip" style={{ color: chip.color }}>
+          {chip.icon && <Icon name={chip.icon} size={12} strokeWidth={2.6} />}
+          {chip.text}
+        </span>
         <div className="unit-strip" aria-hidden>
           <div
             className="fill"
@@ -123,7 +129,7 @@ export default function UnitSection({ unit, index, progress, unlocked, complete,
               style={{ left: `calc(50% + ${p.x.toFixed(3)} * var(--amp))`, top: p.y }}
             >
               <div className="crown-node anim-pop" title={`${unit.title} — unit complete!`} aria-label={`${unit.title} complete`}>
-                👑
+                <Icon name="crown" size={30} strokeWidth={2.1} />
               </div>
             </div>
           ) : (

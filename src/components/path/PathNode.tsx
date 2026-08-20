@@ -7,12 +7,13 @@ import { useEffect, useRef, useState } from 'react'
 import { sfx } from '@/audio/sfx'
 import { useProgress } from '@/state/progress'
 import { alpha, shade } from './color'
+import { Icon, type IconName } from './icons'
 
 export type NodeState = 'done' | 'current' | 'locked'
 
 interface Props {
   state: NodeState
-  icon: string
+  icon: IconName
   label: string
   color: string
   /** Sine factor in [-1, 1]; horizontal offset = x * var(--amp). */
@@ -90,9 +91,15 @@ export default function PathNode({ state, icon, label, color, x, y, delayMs = 0,
             />
           </svg>
         ) : (
-          <span className="node-ico" aria-hidden>{icon}</span>
+          <span className="node-ico" aria-hidden>
+            <Icon name={icon} size={state === 'current' ? 32 : 30} strokeWidth={2.1} />
+          </span>
         )}
-        {locked && <span className="lock-badge" aria-hidden>🔒</span>}
+        {locked && (
+          <span className="lock-badge" aria-hidden>
+            <Icon name="lock" size={13} strokeWidth={2.4} />
+          </span>
+        )}
         {state === 'current' && (
           <span className="start-bubble" aria-hidden>
             <span className="bb">START</span>

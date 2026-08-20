@@ -6,6 +6,7 @@ import type { Unit } from '@/content/schema'
 import { LESSONS_PER_UNIT } from '@/engine/lessons'
 import ChunkyButton from '@/components/ChunkyButton'
 import { alpha, shade } from './color'
+import { UnitIcon } from './icons'
 
 interface Props {
   unit: Unit
@@ -20,9 +21,9 @@ export default function StickyUnitHeader({ unit, progress, onContinue }: Props) 
       <div
         className="mini-emoji"
         aria-hidden
-        style={{ background: `linear-gradient(180deg, ${shade(color, 0.18)}, ${shade(color, -0.22)})` }}
+        style={{ background: `linear-gradient(180deg, ${shade(color, 0.18)}, ${shade(color, -0.22)})`, color: '#fff' }}
       >
-        {unit.emoji}
+        <UnitIcon emoji={unit.emoji} size={22} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div className="mini-eyebrow" style={{ color: shade(color, 0.4) }}>

@@ -44,41 +44,43 @@ export function KhomLoi({ id, size = 64 }: { id: string; size?: number }) {
         </linearGradient>
       </defs>
 
-      {/* ambient halo */}
-      <ellipse cx="32" cy="42" rx="34" ry="40" fill={`url(#${g('halo')})`} />
+      {/* ambient halo, brightest at the mouth where the flame sits */}
+      <ellipse cx="32" cy="46" rx="30" ry="32" fill={`url(#${g('halo')})`} />
 
-      {/* paper body: soft-shouldered dome tapering to the mouth */}
+      {/* paper body: rounded shoulders tapering WIDER toward the mouth
+          (classic khom loi trapezoid silhouette) */}
       <path
-        d="M32 4
-           C 45 4 52 15 53.5 30
-           C 54.8 43 52.5 56 50 63
-           L 14 63
-           C 11.5 56 9.2 43 10.5 30
-           C 12 15 19 4 32 4 Z"
+        d="M25 6
+           C 27 3.8 37 3.8 39 6
+           C 44 10 47.5 22 49.5 34
+           C 51 43.5 52 52 52.5 58
+           L 11.5 58
+           C 12 52 13 43.5 14.5 34
+           C 16.5 22 20 10 25 6 Z"
         fill={`url(#${g('paper')})`}
       />
       {/* side shading + right rim light */}
       <path
-        d="M32 4 C 45 4 52 15 53.5 30 C 54.8 43 52.5 56 50 63 L 14 63 C 11.5 56 9.2 43 10.5 30 C 12 15 19 4 32 4 Z"
+        d="M25 6 C 27 3.8 37 3.8 39 6 C 44 10 47.5 22 49.5 34 C 51 43.5 52 52 52.5 58 L 11.5 58 C 12 52 13 43.5 14.5 34 C 16.5 22 20 10 25 6 Z"
         fill={`url(#${g('shade')})`}
       />
       {/* rib lines */}
-      <path d="M22 6.5 C 19 22 18.6 44 20.5 63" stroke="#D96A0A" strokeOpacity="0.35" strokeWidth="1.4" fill="none" />
-      <path d="M42 6.5 C 45 22 45.4 44 43.5 63" stroke="#D96A0A" strokeOpacity="0.35" strokeWidth="1.4" fill="none" />
+      <path d="M25 8 C 22 22 20.5 42 20 58" stroke="#D96A0A" strokeOpacity="0.35" strokeWidth="1.4" fill="none" />
+      <path d="M39 8 C 42 22 43.5 42 44 58" stroke="#D96A0A" strokeOpacity="0.35" strokeWidth="1.4" fill="none" />
 
       {/* inner flame glow bleeding through the paper */}
-      <ellipse cx="32" cy="52" rx="15" ry="12" fill={`url(#${g('flame')})`} />
+      <ellipse cx="32" cy="48" rx="16" ry="11" fill={`url(#${g('flame')})`} />
 
       {/* darker bamboo mouth rim */}
-      <path d="M14 61 h36 a2.6 2.6 0 0 1 2.6 2.6 v1.2 a2.6 2.6 0 0 1 -2.6 2.6 h-36 a2.6 2.6 0 0 1 -2.6 -2.6 v-1.2 a2.6 2.6 0 0 1 2.6 -2.6 Z" fill="#B4470B" />
-      <path d="M14 61 h36 a2.6 2.6 0 0 1 2.6 2.6 v0.4 h-41.2 v-0.4 a2.6 2.6 0 0 1 2.6 -2.6 Z" fill="#8A3208" opacity="0.6" />
+      <path d="M12.5 56.5 h39 a2.8 2.8 0 0 1 2.8 2.8 v1 a2.8 2.8 0 0 1 -2.8 2.8 h-39 a2.8 2.8 0 0 1 -2.8 -2.8 v-1 a2.8 2.8 0 0 1 2.8 -2.8 Z" fill="#B4470B" />
+      <path d="M9.7 59.6 h44.6 v0.7 a2.8 2.8 0 0 1 -2.8 2.8 h-39 a2.8 2.8 0 0 1 -2.8 -2.8 Z" fill="#8A3208" opacity="0.55" />
       {/* flame peeking at the mouth */}
-      <ellipse cx="32" cy="63.6" rx="7" ry="2.4" fill="#FFE9A8" opacity="0.9" />
+      <ellipse cx="32" cy="59.4" rx="9" ry="2.6" fill="#FFE9A8" opacity="0.95" />
 
-      {/* hanging tassel */}
-      <path d="M32 67.4 V 82" stroke="#B4470B" strokeWidth="2" strokeLinecap="round" />
-      <path d="M32 82 l -3.4 8 M32 82 l 0 9.5 M32 82 l 3.4 8" stroke="#D96A0A" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="32" cy="82" r="2.4" fill="#FFD166" />
+      {/* short hanging tassel */}
+      <path d="M32 63.4 V 71" stroke="#B4470B" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M32 71 l -3 5.4 M32 71 l 0 6.6 M32 71 l 3 5.4" stroke="#D96A0A" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="32" cy="71" r="2.2" fill="#FFD166" />
     </svg>
   )
 }

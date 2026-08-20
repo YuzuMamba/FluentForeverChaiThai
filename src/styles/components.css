@@ -35,6 +35,29 @@
 .hud-stat.xp { color: var(--xp); }
 .hud-stat.gems { color: var(--sky); }
 
+/* Currency pills live in one row that compacts + scrolls on mobile, so no
+   stat silently disappears on the primary screen. */
+.hud-stats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .hud { gap: 10px; padding: 0 14px; }
+  .hud-wordmark { font-size: 17px !important; }
+  .hud-stats {
+    gap: 7px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hud-stats::-webkit-scrollbar { display: none; }
+  .hud-stat { flex-shrink: 0; font-size: 13.5px; gap: 4px; padding: 5px 10px; }
+  .hud-stat .ico { font-size: 14px; }
+  .hud-stat .goal-ring { transform: scale(0.75); margin: -6px -4px; }
+}
+
 /* Word tiles (word-bank construction) */
 .tile {
   display: inline-flex;
@@ -158,6 +181,18 @@
 .feedback .feedback-detail .thai { font-size: 18px; }
 
 /* Bottom navigation */
+/* Fade scrim so scrolling content dissolves beneath the floating nav
+   instead of clipping mid-sentence behind it. */
+.bottom-nav-scrim {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 168px;
+  z-index: 49;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(7, 12, 26, 0) 0%, rgba(7, 12, 26, 0.6) 32%, rgba(7, 12, 26, 0.94) 62%, rgba(7, 12, 26, 1) 100%);
+}
 .bottom-nav {
   position: fixed;
   left: 50%;
@@ -190,13 +225,21 @@
   cursor: pointer;
   transition: all var(--dur-fast) var(--ease-out);
 }
-.bottom-nav .nav-item .nav-ico { font-size: 22px; line-height: 1.1; transition: transform var(--dur-fast) var(--ease-spring); }
+.bottom-nav .nav-item .nav-ico {
+  font-size: 20px;
+  line-height: 1.1;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: #a78bfa; /* icon base tone */
+  transition: transform var(--dur-fast) var(--ease-spring), color var(--dur-fast) var(--ease-out);
+}
 .bottom-nav .nav-item:hover .nav-ico { transform: scale(1.18) rotate(-4deg); }
 .bottom-nav .nav-item.active {
   color: var(--gold);
   background: rgba(255, 176, 32, 0.12);
 }
-.bottom-nav .nav-item.active .nav-ico { transform: scale(1.12); }
+.bottom-nav .nav-item.active .nav-ico { transform: scale(1.12); color: #fbbf24; /* icon active tone */ }
 
 /* Audio button */
 .audio-btn {
