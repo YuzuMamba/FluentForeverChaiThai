@@ -254,7 +254,7 @@ const unitModule: UnitModule = {
         title: 'ข้าว is more than rice',
         body:
           'ข้าว literally means rice, but it stands for food itself. กินข้าว = have a meal (even a noodle one). ' +
-          'กินข้าวไหม "eaten yet? / want to eat?" is how friends greet each other — food is small talk in Thailand. ' +
+          'กินข้าวไหม "want to eat?" is a standing invitation, and the greeting กินข้าวหรือยัง "eaten yet?" is how friends say hello — food is small talk in Thailand. ' +
           'Answer หิวมาก and you have made lunch plans.',
       },
       {

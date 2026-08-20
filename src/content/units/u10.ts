@@ -98,7 +98,7 @@ const words: Word[] = [
     id: 'w.dog', thai: 'หมา', roman: 'mǎa', en: 'dog',
     syllables: [{ thai: 'หมา', roman: 'maa', tone: 'rising' }],
     pos: 'noun', emoji: '🐶', tags: ['object'],
-    note: 'The everyday word (สุนัข is the formal one nobody says to friends). Rising tone — flat mǎa with a scoop, or you might say หมา wrong and confuse it with หมู pork.',
+    note: 'The everyday word (สุนัข is the formal one nobody says to friends). Rising tone — start flat and scoop up, or หมา turns into มา (maa, mid — "come") or ม้า (máa, high — "horse"), the classic tone trap.',
   },
   {
     id: 'w.cat', thai: 'แมว', roman: 'mɛɛo', en: 'cat',

@@ -79,7 +79,7 @@ const words: Word[] = [
     id: 'w.fun', thai: 'สนุก', roman: 'sà-nùk', en: 'fun', enAlt: ['enjoyable', 'have fun'],
     syllables: [
       { thai: 'สะ', roman: 'sa', tone: 'low' },
-      { thai: 'นุก', roman: 'nuk', tone: 'low' },
+      { thai: 'หนุก', roman: 'nuk', tone: 'low' },
     ],
     pos: 'adj', emoji: '🎉', tags: ['core', 'adjective', 'feeling', 'standalone'],
     note: 'Both "fun" and "to have fun". สนุกไหม is the standard question after any trip, party, or movie.',

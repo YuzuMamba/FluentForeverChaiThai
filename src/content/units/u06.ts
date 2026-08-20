@@ -26,12 +26,6 @@ const words: Word[] = [
     note: 'How Thais actually order: เอา + dish = "I\'ll take...". Direct but not rude — add ครับ/ค่ะ and it\'s perfectly polite. Point at what you want and say it.',
   },
   {
-    id: 'w.can', thai: 'ได้', roman: 'dâai', en: 'can', enAlt: ['can do', 'ok', 'able to', 'may'],
-    syllables: [{ thai: 'ได้', roman: 'daai', tone: 'falling' }],
-    pos: 'verb', emoji: '👌', tags: ['core', 'standalone'],
-    note: 'Placed AFTER the verb phrase: กินเผ็ดได้ = "can eat spicy". Alone it\'s a complete answer: ได้! = "Sure, can do!" — one of the most-heard words in Thailand.',
-  },
-  {
     id: 'w.spicy', thai: 'เผ็ด', roman: 'pèt', en: 'spicy', enAlt: ['hot (spicy)'],
     syllables: [{ thai: 'เผ็ด', roman: 'pet', tone: 'low' }],
     pos: 'adj', emoji: '🌶️', tags: ['core', 'flavor', 'adjective', 'standalone'],

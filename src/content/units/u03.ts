@@ -69,6 +69,12 @@ const words: Word[] = [
     note: '"English" said the Thai way. ภาษาอังกฤษ = the language, คนอังกฤษ = a British person.',
   },
   {
+    id: 'w.can', thai: 'ได้', roman: 'dâai', en: 'can', enAlt: ['can do', 'ok', 'able to', 'may'],
+    syllables: [{ thai: 'ได้', roman: 'daai', tone: 'falling' }],
+    pos: 'verb', emoji: '👌', tags: ['core', 'standalone'],
+    note: 'Placed AFTER the verb phrase: พูดไทยได้ = "can speak Thai". Alone it\'s a complete answer: ได้! = "Sure, can do!" — one of the most-heard words in Thailand.',
+  },
+  {
     id: 'w.japan', thai: 'ญี่ปุ่น', roman: 'yîi-bpùn', en: 'Japan', enAlt: ['japanese'],
     syllables: [
       { thai: 'ญี่', roman: 'yii', tone: 'falling' },
@@ -163,14 +169,14 @@ const sentences: Sentence[] = [
     literal: 'he/she | be | Westerner',
   },
   {
-    id: 's.speak-thai-q', wordIds: ['w.speak', 'w.language', 'w.thai', 'w.q-mai'],
-    en: 'Do you speak Thai?', enAlt: ['can you speak thai?'],
-    literal: 'speak | language | Thai | ?', tags: ['question'],
+    id: 's.speak-thai-q', wordIds: ['w.speak', 'w.language', 'w.thai', 'w.can', 'w.q-mai'],
+    en: 'Can you speak Thai?', enAlt: ['do you speak thai?'],
+    literal: 'speak | language | Thai | can | ?', tags: ['question'],
   },
   {
-    id: 's.speak-english-q', wordIds: ['w.speak', 'w.language', 'w.english', 'w.q-mai'],
-    en: 'Do you speak English?', enAlt: ['can you speak english?'],
-    literal: 'speak | language | English | ?', tags: ['question'],
+    id: 's.speak-english-q', wordIds: ['w.speak', 'w.language', 'w.english', 'w.can', 'w.q-mai'],
+    en: 'Can you speak English?', enAlt: ['do you speak english?'],
+    literal: 'speak | language | English | can | ?', tags: ['question'],
   },
   {
     id: 's.not-understand-m', wordIds: ['w.not', 'w.understand', 'w.polite-m'],

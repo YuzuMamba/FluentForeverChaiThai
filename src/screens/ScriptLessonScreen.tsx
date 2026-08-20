@@ -4,9 +4,11 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { registry } from '@/content'
-import { toneMarked, TONE_INFO } from '@/content/schema'
+import { toneMarked, TONE_INFO, type ScriptLesson } from '@/content/schema'
 import { generateScriptLesson } from '@/engine/lessons'
 import type { Exercise } from '@/engine/exercises'
+import { sfx } from '@/audio/sfx'
+import { tts } from '@/audio/tts'
 import { useProgress } from '@/state/progress'
 import { useRouter } from '@/state/router'
 import SessionRunner from '@/components/SessionRunner'
@@ -52,6 +54,37 @@ function resolveLetters(chars: string[]): LetterInfo[] {
     }
     return { key: ch, glyph: ch, name: 'new letter', sound: '', color: '#8494b8' }
   })
+}
+
+/** Tap-to-hear preview chip for one reading drill, tinted by its tone. */
+function DrillChip({ drill, delay }: { drill: ScriptLesson['readingDrills'][number]; delay: number }) {
+  const sound = useProgress((s) => s.settings.sound)
+  const rate = useProgress((s) => s.settings.ttsRate)
+  const [playing, setPlaying] = useState(false)
+  const info = TONE_INFO[drill.tone]
+  const style: React.CSSProperties & Record<string, string> = {
+    '--sd-color': info.color,
+    '--sd-glow': alpha(info.color, 0.25),
+    animationDelay: `${delay}ms`,
+  }
+  return (
+    <button
+      className={`splash-drill ${playing ? 'playing' : ''}`}
+      style={style}
+      onClick={() => {
+        if (sound) sfx.play('pop')
+        tts.speak(drill.thai, {
+          rate,
+          onStart: () => setPlaying(true),
+          onEnd: () => setPlaying(false),
+        })
+      }}
+      aria-label={`Hear ${toneMarked(drill.roman, drill.tone)}${drill.en ? ` — ${drill.en}` : ''}`}
+    >
+      <span className="sd-thai thai">{drill.thai}</span>
+      <span className="sd-roman">{toneMarked(drill.roman, drill.tone)}</span>
+    </button>
+  )
 }
 
 export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
@@ -200,6 +233,21 @@ export default function ScriptLessonScreen({ lessonId }: { lessonId: string }) {
                     .map((t) => `${TONE_INFO[t].contour} ${TONE_INFO[t].label.toLowerCase()}`)
                     .join(' · ')}
                 </div>
+              </>
+            )}
+
+            {letters.length === 0 && lesson.readingDrills.length > 0 && (
+              <>
+                <div className="splash-section">You'll walk out reading</div>
+                <div className="splash-drills">
+                  {lesson.readingDrills.slice(0, 8).map((d, i) => (
+                    <DrillChip key={`${d.thai}-${i}`} drill={d} delay={120 + i * 60} />
+                  ))}
+                  {lesson.readingDrills.length > 8 && (
+                    <span className="sd-more">+{lesson.readingDrills.length - 8} more</span>
+                  )}
+                </div>
+                <div className="splash-drills-hint">Tap any word to hear it — really, you'll read all of these.</div>
               </>
             )}
 

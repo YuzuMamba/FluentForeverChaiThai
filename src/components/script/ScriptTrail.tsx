@@ -5,7 +5,7 @@
  * While the course content is still being authored, a ghost trail of unlit
  * lanterns keeps the path visible.
  */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ScriptLesson } from '@/content/schema'
 import { sfx } from '@/audio/sfx'
 import { useProgress } from '@/state/progress'
@@ -137,12 +137,33 @@ interface Props {
 }
 
 export default function ScriptTrail({ lessons, completed, onOpen }: Props) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+
+  // The dashed connector is drawn toward the next stone; when flex wrapping
+  // breaks a row, the last stone of the row must not dangle a dash into
+  // nothing. Measure rows and tag those items with .row-end.
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    const update = () => {
+      const items = Array.from(wrap.querySelectorAll<HTMLElement>(':scope > .trail-item'))
+      for (let i = 0; i < items.length; i++) {
+        const next = items[i + 1]
+        items[i].classList.toggle('row-end', !!next && next.offsetTop > items[i].offsetTop + 20)
+      }
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(wrap)
+    return () => ro.disconnect()
+  }, [lessons])
+
   if (lessons.length === 0) return <GhostTrail />
 
   const doneSet = new Set(completed)
   let currentFound = false
   return (
-    <div className="script-trail">
+    <div className="script-trail" ref={wrapRef}>
       {lessons.map((lesson, i) => {
         const done = doneSet.has(lesson.id)
         const unlocked = i === 0 || doneSet.has(lessons[i - 1].id)

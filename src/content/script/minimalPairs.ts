@@ -28,7 +28,7 @@ export const minimalPairs: MinimalPair[] = [
     contrast: "tone",
     a: { thai: "มา", roman: "maa", tone: "mid", en: "come", emoji: "🚶" },
     b: { thai: "หมา", roman: "mǎa", tone: "rising", en: "dog", emoji: "🐶" },
-    note: "Part 3: มาหมามา 'the dog comes' uses both. The silent ห in หมา is what forces the rising tone.",
+    note: "Part 3: หมามา 'the dog comes' uses both. The silent ห in หมา is what forces the rising tone.",
   },
   {
     id: "mp.kaao-white-news",

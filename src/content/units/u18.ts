@@ -42,7 +42,7 @@ const words: Word[] = [
       { thai: 'ไหร่', roman: 'rai', tone: 'low' },
     ],
     pos: 'question', emoji: '🕰️', tags: ['core', 'question'],
-    note: 'Sits at the END like other Thai question words: ว่างเมื่อไหร่ = when are you free? Never at the start.',
+    note: 'Usually sits at the END like other Thai question words: ว่างเมื่อไหร่ = when are you free? Fronting it (เมื่อไหร่จะมา) is also common and adds a "when are you EVER…" impatience.',
   },
   {
     id: 'w.weekend', thai: 'เสาร์อาทิตย์', roman: 'sǎo-aa-tít', en: 'weekend', enAlt: ['the weekend', 'saturday-sunday'],

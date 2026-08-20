@@ -123,6 +123,8 @@
 .trail-item.seg-done:not(:last-child)::before {
   border-top-color: rgba(46, 230, 168, 0.55);
 }
+/* last stone of a wrapped row: no dash dangling into the void */
+.trail-item.row-end::before { display: none; }
 
 @keyframes trail-ring-pulse {
   0% { transform: scale(0.92); opacity: 0.9; }
@@ -798,6 +800,58 @@
 .splash-letter .slsound { font-size: 11.5px; font-weight: 800; color: var(--gold-bright); margin-top: 1px; }
 .splash-letter .audio-btn { margin: 9px auto 0; }
 
+/* "you'll walk out reading" drill preview (tap-to-hear) */
+.splash-drills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 14px;
+}
+.splash-drill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 8px 15px 7px;
+  border-radius: var(--r-md);
+  border: 2px solid var(--stroke-strong);
+  border-bottom-width: 4px;
+  background: linear-gradient(180deg, rgba(29, 43, 82, 0.9), rgba(18, 29, 58, 0.9));
+  font-family: var(--font-display);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: pop-in var(--dur-med) var(--ease-spring) both;
+  transition: transform var(--dur-fast) var(--ease-spring),
+              border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.splash-drill:hover {
+  transform: translateY(-2px);
+  border-color: var(--sd-color, var(--stroke-strong));
+  box-shadow: 0 8px 20px rgba(3, 7, 18, 0.5), 0 0 14px var(--sd-glow, transparent);
+}
+.splash-drill:active { transform: translateY(1px) scale(0.96); }
+.splash-drill.playing { border-color: var(--sd-color); box-shadow: 0 0 16px var(--sd-glow); }
+.splash-drill .sd-thai { font-size: 23px; font-weight: 600; line-height: 1.5; color: var(--text-0); }
+.splash-drill .sd-roman { font-size: 11.5px; font-weight: 800; color: var(--sd-color, var(--text-2)); }
+.splash-drills .sd-more {
+  align-self: center;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+  padding: 5px 13px;
+  border-radius: var(--r-full);
+  border: 1.5px dashed var(--stroke-strong);
+}
+.splash-drills-hint {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
 /* tone-rules table */
 .tone-table {
   margin-top: 14px;
@@ -867,8 +921,10 @@
   .trail-ghost-zone .script-empty { margin-top: -8px; flex-direction: row; text-align: left; padding: 20px; gap: 14px; }
   .splash-card .splash-body { padding: 24px 18px 26px; }
   .splash-head h1 { font-size: 26px; }
-  .tone-table .trow { grid-template-columns: 1fr auto; }
+  .tone-table .trow { grid-template-columns: 1fr auto; gap: 6px 14px; }
   .tone-table .trow .tex { grid-column: 1 / -1; text-align: left; }
+  .tone-table .tex .xt { display: inline; margin-right: 8px; }
+  .tone-table .tex .xr { display: inline; }
   .tone-table .thead .tex { display: none; }
   .script-empty { flex-direction: column; text-align: center; padding: 24px 18px; }
 }

@@ -130,8 +130,9 @@ const words: Word[] = [
 const sentences: Sentence[] = [
   {
     id: 's.go-where-m', wordIds: ['w.go', 'w.where', 'w.polite-m'],
+    thaiOverride: 'ไปไหนครับ',
     en: 'Where are you going? (male speaker)', enAlt: ['where to?', 'where are you off to?'],
-    literal: 'go | where | ♂-polite', tags: ['greeting', 'travel'],
+    literal: 'go | where(ไหน) | ♂-polite', tags: ['greeting', 'travel'],
   },
   {
     id: 's.go-market-m', wordIds: ['w.go', 'w.market', 'w.polite-m'],
