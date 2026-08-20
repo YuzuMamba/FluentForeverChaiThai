@@ -3,7 +3,7 @@
  * Everything derived (due counts, mastery, unlock gates) lives in selectors.
  */
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import { type CardState, type Grade, type ItemType, newCard, review, isDue, isMastered, memoryStrength } from '@/srs/scheduler'
 
 export type RomanizationMode = 'full' | 'toneless' | 'hidden'
@@ -60,6 +60,32 @@ function yesterdayKey(): string {
   const d = new Date()
   d.setDate(d.getDate() - 1)
   return todayKey(d)
+}
+
+/**
+ * localStorage access THROWS inside sandboxed iframes (e.g. hosted previews).
+ * Fall back to in-memory storage so the app still runs (progress lasts for
+ * the visit only).
+ */
+function resilientStorage(): Storage {
+  try {
+    const probe = '__chai_probe__'
+    window.localStorage.setItem(probe, probe)
+    window.localStorage.removeItem(probe)
+    return window.localStorage
+  } catch {
+    const mem = new Map<string, string>()
+    return {
+      getItem: (k: string) => mem.get(k) ?? null,
+      setItem: (k: string, v: string) => void mem.set(k, v),
+      removeItem: (k: string) => void mem.delete(k),
+      clear: () => mem.clear(),
+      key: (i: number) => [...mem.keys()][i] ?? null,
+      get length() {
+        return mem.size
+      },
+    } as Storage
+  }
 }
 
 const defaultSettings: Settings = {
@@ -172,7 +198,7 @@ export const useProgress = create<ProgressState>()(
         })
       },
     }),
-    { name: 'chai-thai-progress-v1' },
+    { name: 'chai-thai-progress-v1', storage: createJSONStorage(resilientStorage) },
   ),
 )
 

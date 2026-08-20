@@ -194,10 +194,12 @@ interface Props {
   variant?: 'dusk' | 'deep'
   /** Disable postprocessing for weaker devices / reduced motion. */
   effects?: boolean
+  /** Render the drifting 3D lanterns (screens may supply their own lantern art). */
+  lanterns?: boolean
   className?: string
 }
 
-export default function WorldBackdrop({ variant = 'dusk', effects = true, className }: Props) {
+export default function WorldBackdrop({ variant = 'dusk', effects = true, lanterns = true, className }: Props) {
   return (
     <div
       className={className}
@@ -214,7 +216,7 @@ export default function WorldBackdrop({ variant = 'dusk', effects = true, classN
         <SkyDome variant={variant} />
         <ambientLight intensity={0.5} color="#8090c0" />
         <directionalLight position={[4, 8, 2]} intensity={0.7} color="#ffd9a0" />
-        <Lanterns />
+        {lanterns && <Lanterns />}
         <Fireflies />
         <ParallaxRig />
         {effects && (

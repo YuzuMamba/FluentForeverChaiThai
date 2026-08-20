@@ -57,7 +57,10 @@ const stepVariants: Variants = {
 
 const CSS = `
 .ob-top {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 5;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -128,14 +131,59 @@ const CSS = `
   width: 100%;
   max-width: 980px;
   margin: 0 auto;
-  min-height: calc(100vh - 68px);
-  min-height: calc(100dvh - 68px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  align-content: safe center;
+  justify-items: center;
   text-align: center;
-  padding: 8px 22px 52px;
+  padding: 84px 22px 56px;
+}
+
+/* ── Ambient layers: hero scrim, horizon glow, SVG khom loi lanterns ── */
+.ob-scrim {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(880px, 104vw);
+  height: min(780px, 104vh);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(28, 22, 52, 0.6), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.ob-horizon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  background: linear-gradient(180deg, transparent, rgba(255, 138, 43, 0.07) 45%, rgba(255, 166, 48, 0.14));
+  pointer-events: none;
+  z-index: 0;
+}
+.ob-lanterns {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.ob-lantern {
+  position: absolute;
+  opacity: var(--lo, 1);
+  transform: scale(var(--ls, 1));
+  animation: ob-lantern-drift 12s ease-in-out infinite;
+  will-change: transform;
+}
+.ob-lantern svg {
+  overflow: visible;
+  filter: drop-shadow(0 0 24px rgba(255, 166, 48, 0.45)) drop-shadow(0 0 72px rgba(255, 138, 43, 0.2));
+}
+@keyframes ob-lantern-drift {
+  0%, 100% { transform: translate3d(0, 10px, 0) rotate(-2deg) scale(var(--ls, 1)); }
+  50% { transform: translate3d(7px, -12px, 0) rotate(2.4deg) scale(var(--ls, 1)); }
 }
 
 /* ── Hero / Ready stage ── */
@@ -152,17 +200,22 @@ const CSS = `
   pointer-events: none;
 }
 .ob-shadow {
-  width: 112px;
-  height: 16px;
-  margin: -6px auto 0;
+  width: 64px;
+  height: 14px;
+  margin: -20px auto 0;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(3, 7, 18, 0.65), transparent 70%);
-  filter: blur(4px);
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.25) 60%, transparent 78%);
+  filter: blur(6px);
+  animation: ob-shadow-bob 3.2s ease-in-out infinite;
+}
+@keyframes ob-shadow-bob {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.75; }
 }
 .ob-bubble {
   position: absolute;
-  top: -14px;
-  right: -60px;
+  top: -10px;
+  right: -48px;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -172,14 +225,24 @@ const CSS = `
   padding: 8px 14px 6px;
   border-radius: 16px 16px 16px 4px;
   box-shadow: 0 8px 24px rgba(3, 7, 18, 0.45);
-  animation: pop-in var(--dur-med) var(--ease-spring) 450ms both,
-             float-y 3.2s ease-in-out 1.4s infinite;
+  transform-origin: 10% 100%;
+  animation: ob-bubble-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1) 450ms both,
+             float-y 3s ease-in-out 1.4s infinite;
+}
+@keyframes ob-bubble-in {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
 }
 .ob-bubble .thai { font-size: 18px; font-weight: 700; line-height: 1.35; }
 .ob-bubble small { font-size: 10.5px; font-weight: 700; color: #a07818; letter-spacing: 0.02em; }
+.ob-bubble-tail {
+  position: absolute;
+  left: 2px;
+  bottom: -10px;
+}
 
 .ob-wordmark {
-  margin-top: 20px;
+  margin-top: 40px;
   font-size: clamp(46px, 8vw, 72px);
   font-weight: 800;
   line-height: 1.04;
@@ -192,28 +255,59 @@ const CSS = `
 }
 .ob-promise {
   color: var(--text-1);
-  font-size: clamp(16px, 2.4vw, 19.5px);
+  font-size: clamp(18px, 2.4vw, 19.5px);
   font-weight: 600;
-  line-height: 1.6;
-  max-width: 560px;
-  margin: 12px auto 30px;
+  line-height: 1.5;
+  max-width: 30ch;
+  text-wrap: balance;
+  margin: 20px auto 0;
   text-shadow: 0 2px 12px rgba(7, 12, 26, 0.9), 0 0 30px rgba(7, 12, 26, 0.7);
 }
+.ob-cta-stack {
+  width: 100%;
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
 .ob-cta {
-  display: inline-block;
+  display: block;
+  width: calc(100% - 48px);
+  max-width: 380px;
   border-radius: var(--r-md);
   animation: slide-up var(--dur-med) var(--ease-out) 240ms both,
              pulse-glow 2.6s var(--ease-out) 1.4s infinite;
 }
-.ob-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+.ob-cta .btn { width: 100%; }
+.btn.ob-ghost {
+  width: calc(100% - 48px);
+  max-width: 380px;
+  padding: 13px 26px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  color: #ffc94d;
+  box-shadow: 0 4px 0 rgba(255, 255, 255, 0.10);
+}
+.btn.ob-ghost:hover {
+  filter: none;
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.04);
+}
+.btn.ob-ghost:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(255, 255, 255, 0.10);
+}
+.ob-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
 .ob-chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   padding: 7px 14px;
   border-radius: var(--r-full);
-  border: 1px solid var(--stroke);
-  background: rgba(12, 20, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: var(--text-1);
@@ -221,6 +315,7 @@ const CSS = `
   font-weight: 700;
   white-space: nowrap;
 }
+.ob-chip svg { flex-shrink: 0; }
 
 /* ── Shared step typography ── */
 .ob-kicker {
@@ -403,8 +498,12 @@ const CSS = `
 
 /* ── Mobile ── */
 @media (max-width: 720px) {
-  .ob-main { padding: 4px 18px 40px; }
+  .ob-main { padding: 80px 18px 44px; }
   .ob-glow { width: 300px; height: 300px; }
+  /* The hero column spans nearly the full width on mobile — every lantern
+     potentially intersects it, so dim them all well below text contrast. */
+  .ob-lantern { opacity: calc(var(--lo, 1) * 0.5); }
+  .ob-scrim { width: 130vw; }
   .ob-how-grid { grid-template-columns: 1fr; gap: 12px; margin: 24px 0 28px; }
   .ob-how-card { flex-direction: row; align-items: center; gap: 15px; padding: 16px; }
   .ob-how-ico { width: 50px; height: 50px; font-size: 25px; border-radius: 15px; flex-shrink: 0; }
@@ -421,7 +520,112 @@ const CSS = `
 }
 `
 
-function HeroStep({ onStart }: { onStart: () => void }) {
+/* ── Hand-drawn SVG khom loi lanterns (glow via stacked drop-shadows, no halo edge) ──
+   Positions keep every lantern center well clear of the centered hero column
+   (~min(600px, 100%) wide): nothing between 24% and 76% horizontally. Lanterns
+   nearest the column edge are pre-dimmed to 40% opacity. */
+const LANTERN_SPOTS = [
+  { left: '5%', top: '13%', s: 1.05, o: 0.95, dur: 11, delay: -2 },
+  { left: '12%', top: '55%', s: 0.7, o: 0.4, dur: 13, delay: -6 },
+  { left: '3%', top: '74%', s: 0.85, o: 0.85, dur: 12, delay: -4 },
+  { left: '20%', top: '4%', s: 0.55, o: 0.5, dur: 14, delay: -9 },
+  { left: '92%', top: '10%', s: 0.9, o: 0.95, dur: 12, delay: -1 },
+  { left: '87%', top: '44%', s: 0.62, o: 0.4, dur: 13, delay: -7 },
+  { left: '95%', top: '66%', s: 1.1, o: 0.9, dur: 11, delay: -5 },
+  { left: '79%', top: '86%', s: 0.6, o: 0.5, dur: 14, delay: -3 },
+]
+
+function LanternSVG({ id }: { id: number }) {
+  const g = `ob-lantern-g${id}`
+  return (
+    <svg width="36" height="50" viewBox="0 0 36 50" fill="none" aria-hidden>
+      <defs>
+        <linearGradient id={g} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFD166" />
+          <stop offset="1" stopColor="#FF8A2B" />
+        </linearGradient>
+      </defs>
+      {/* Paper body — soft trapezoid, wider at the crown */}
+      <path d="M6 5 Q18 0.5 30 5 L27.2 38 Q18 42.5 8.8 38 Z" fill={`url(#${g})`} />
+      {/* Bamboo ribs */}
+      <path d="M6.9 15.5 Q18 19 29.1 15.5" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
+      <path d="M7.8 26.5 Q18 29.8 28.2 26.5" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
+      {/* Base rim + flame */}
+      <path d="M8.8 38 Q18 42.5 27.2 38" stroke="rgba(150,66,10,0.45)" strokeWidth="1.6" />
+      <circle cx="18" cy="42" r="4" fill="rgba(255,214,125,0.55)" />
+      <circle cx="18" cy="41.6" r="2.1" fill="#FFF3C4" />
+    </svg>
+  )
+}
+
+function LanternLayer() {
+  return (
+    <div className="ob-lanterns" aria-hidden>
+      {LANTERN_SPOTS.map((p, i) => (
+        <div
+          key={i}
+          className="ob-lantern"
+          style={{
+            left: p.left,
+            top: p.top,
+            animationDuration: `${p.dur}s`,
+            animationDelay: `${p.delay}s`,
+            '--ls': p.s,
+            '--lo': p.o,
+          } as React.CSSProperties}
+        >
+          <LanternSVG id={i} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ── 20px chip icons in the mascot's soft rounded style ── */
+const CHIP_ICON = {
+  width: 20,
+  height: 20,
+  viewBox: '0 0 20 20',
+  fill: 'none',
+  stroke: '#FFC94D',
+  strokeWidth: 1.75,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  'aria-hidden': true,
+} as const
+
+function IconLantern() {
+  return (
+    <svg {...CHIP_ICON}>
+      <path d="M8.2 2h3.6" />
+      <path d="M10 2v1.7" />
+      <path d="M6.7 5.1Q10 3.8 13.3 5.1l-.8 8Q10 14.6 7.5 13.1Z" />
+      <path d="M7 8.4Q10 9.5 13 8.4" />
+      <path d="M10 14.9v2.1" />
+    </svg>
+  )
+}
+
+function IconToneWave() {
+  return (
+    <svg {...CHIP_ICON}>
+      <path d="M2.6 13.4C5 6.2 7.6 5.8 10 9.7c2.4 3.9 5 3.5 7.4-3.1" />
+      <circle cx="2.6" cy="13.4" r="1" fill="#FFC94D" stroke="none" />
+      <circle cx="17.4" cy="6.6" r="1" fill="#FFC94D" stroke="none" />
+    </svg>
+  )
+}
+
+function IconBubbles() {
+  return (
+    <svg {...CHIP_ICON}>
+      <path d="M8 3.4h5.4A2.6 2.6 0 0 1 16 6v2.3a2.6 2.6 0 0 1-2.6 2.6h-.3" />
+      <path d="M4.6 6.9h5.8A2.6 2.6 0 0 1 13 9.5v2.4a2.6 2.6 0 0 1-2.6 2.6H8.2l-2.7 2.3v-2.3h-.9A2.6 2.6 0 0 1 2 11.9V9.5a2.6 2.6 0 0 1 2.6-2.6Z" />
+    </svg>
+  )
+}
+
+function HeroStep({ onStart, onHaveAccount }: { onStart: () => void; onHaveAccount: () => void }) {
   const units = registry.units.length
   return (
     <>
@@ -430,21 +634,34 @@ function HeroStep({ onStart }: { onStart: () => void }) {
         <div className="ob-bubble">
           <span className="thai">สวัสดี!</span>
           <small>sà-wàt-dii · hello!</small>
+          <svg className="ob-bubble-tail" width="16" height="12" viewBox="0 0 16 12" aria-hidden>
+            <path d="M3 0h10.5c-2.6 5.4-6.3 9.3-11 11.2-.7.3-1.3-.4-1-1.1C2.6 6.9 2.9 3.5 3 0Z" fill="#ffedc2" />
+          </svg>
         </div>
         <Mascot mood="happy" size={172} />
         <div className="ob-shadow" />
       </div>
       <h1 className="ob-wordmark anim-slide-up" style={{ animationDelay: '80ms' }}>Chai Thai</h1>
       <p className="ob-promise anim-slide-up" style={{ animationDelay: '160ms' }}>
-        Speak real Thai. Order noodles. Make friends. Tell stories.
+        Speak real Thai. Order noodles. Tell stories.
       </p>
-      <div className="ob-cta">
-        <ChunkyButton variant="gold" size="lg" onClick={onStart}>Get started</ChunkyButton>
+      <div className="ob-cta-stack">
+        <div className="ob-cta">
+          <ChunkyButton variant="gold" size="lg" onClick={onStart}>Get started</ChunkyButton>
+        </div>
+        <ChunkyButton
+          variant="plain"
+          className="ob-ghost anim-slide-up"
+          style={{ animationDelay: '300ms' }}
+          onClick={onHaveAccount}
+        >
+          I already have an account
+        </ChunkyButton>
       </div>
       <div className="ob-chips anim-slide-up" style={{ animationDelay: '340ms' }}>
-        <span className="ob-chip">🏮 {units} story units</span>
-        <span className="ob-chip">🎵 5 tones</span>
-        <span className="ob-chip">🧱 Endless sentences</span>
+        <span className="ob-chip"><IconLantern /> {units} story units</span>
+        <span className="ob-chip"><IconToneWave /> 5 tones</span>
+        <span className="ob-chip"><IconBubbles /> Endless sentences</span>
       </div>
     </>
   )
@@ -579,7 +796,10 @@ export default function OnboardingScreen() {
   return (
     <div className="screen">
       <style>{CSS}</style>
-      <WorldBackdrop variant="dusk" />
+      <WorldBackdrop variant="dusk" lanterns={false} />
+      <LanternLayer />
+      <div className="ob-scrim" aria-hidden />
+      <div className="ob-horizon" aria-hidden />
 
       <header className="ob-top">
         <button
@@ -624,7 +844,7 @@ export default function OnboardingScreen() {
           exit="exit"
           transition={{ type: 'spring', stiffness: 320, damping: 30, mass: 0.9 }}
         >
-          {step === 0 && <HeroStep onStart={next} />}
+          {step === 0 && <HeroStep onStart={next} onHaveAccount={skip} />}
           {step === 1 && <HowStep onNext={next} />}
           {step === 2 && <GoalStep selected={dailyGoalXp} onPick={pickGoal} onNext={next} />}
           {step === 3 && <ReadyStep goalXp={dailyGoalXp} onFinish={finish} />}
